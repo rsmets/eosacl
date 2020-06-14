@@ -25,11 +25,11 @@ ACTION eosacl::claimlock(name owner, uint8_t lock_id) {
 ACTION eosacl::sharekey(name sender, name recipient, uint8_t lock_id) {
   require_auth(sender);
 
-
   // get the lock from the _locks table
   auto& lock = _locks.get(lock_id, "lock does not exsist");
 
-  // TODO: need to verify sender has a key to lock_id
+  // need to verify sender has a key to lock_id
+  checkaccess(sender, lock_id);
 
   // Modify the lock table entry, adding the recipient to the lock.admins vector
   _locks.modify(lock, sender, [&](auto& modified_lock) { // sender is paying for the storage
@@ -44,10 +44,21 @@ ACTION eosacl::sharekey(name sender, name recipient, uint8_t lock_id) {
   });
 }
 
+// Maybe want to make this 'logaccess'? so makes more sense to gatekeep...? but then wouldn't really be right either. can log before checking permissions.
 ACTION eosacl::checkaccess(name username, uint8_t lock_id) {
+  require_auth(get_self()); // could do this but then *only* this contract owner could use (restrict to me and my frontend) otherwise could be abused...
   print ("checking if ", name{username}, " has access to ", uint8_t{lock_id});
 
+  // get the lock from the _locks table
+  auto& user = _users.get(username.value, "user is not had a key shared with, not in dapp yet.");
 
+  // check if the lock_id is found in the user's lock_id vector
+  auto itr = std::find(user.lock_ids.begin(), user.lock_ids.end(), lock_id);
+  //string message = string("user does not have a key to lock_id") + string ((char*)lock_id);
+  string message = "user does not have a key to lock_id";
+  check(itr != user.lock_ids.end(), message);
+    
+  // need to chekc the locks table as well?? shouldn't really but maybe should?
 }
 
 void eosacl::addUserToLock(lock& lock_detail, name& user) {
