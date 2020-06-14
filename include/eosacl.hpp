@@ -18,9 +18,9 @@ CONTRACT eosacl : public contract {
 
   private:
 
-    struct lock {
-      uint8_t  lock_id;
-      vector<name> admins = {};
+    struct lock { // 1 byte + (8 byte * admin_count)
+      uint8_t  lock_id; // 1 byte
+      vector<name> admins = {}; //(8 byte * admin_count)
 
       //lock (name user) : admins.insert(admins.begin(), user){}
     };
@@ -29,10 +29,10 @@ CONTRACT eosacl : public contract {
     void addUserToAdminsVector(vector<name>& admins, name& user);
     void addLockToUser(name sender, name user, uint8_t lock_id);
 
-    TABLE lock_info {
-      uint8_t  lock_id;
-      struct lock lock_details;
-      auto primary_key() const { return lock_id; };
+    TABLE lock_info { // 1 byte + ( 1 byte + (8 byte * admin_count) )
+      uint8_t  lock_id; // 1 byte
+      struct lock lock_details; //( 1 byte + (8 byte * admin_count) )
+      auto primary_key() const { return lock_id; }; 
     };
     typedef multi_index<name("locks"), lock_info> locks_table;
 
@@ -44,11 +44,11 @@ CONTRACT eosacl : public contract {
       vector<uint8_t> lock_ids = {};
     };
 
-    TABLE user_info {
-      name  username;
+    TABLE user_info { // 8 bytes + ( 1 byte * lock_ids_count )
+      name  username; // 8 bytes
       //user user_details;
-      vector<uint8_t> lock_ids = {};
-      auto primary_key() const { return username.value; };
+      vector<uint8_t> lock_ids = {}; // ( 1 byte * lock_ids_count )
+      auto primary_key() const { return username.value; }; 
     };
     typedef multi_index<name("users"), user_info> users_table;
 
