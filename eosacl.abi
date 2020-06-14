@@ -78,7 +78,7 @@
             ]
         },
         {
-            "name": "user",
+            "name": "user_info",
             "base": "",
             "fields": [
                 {
@@ -88,20 +88,6 @@
                 {
                     "name": "lock_ids",
                     "type": "uint8[]"
-                }
-            ]
-        },
-        {
-            "name": "user_info",
-            "base": "",
-            "fields": [
-                {
-                    "name": "username",
-                    "type": "name"
-                },
-                {
-                    "name": "user_details",
-                    "type": "user"
                 }
             ]
         }

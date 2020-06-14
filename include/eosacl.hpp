@@ -27,6 +27,7 @@ CONTRACT eosacl : public contract {
 
     void addUserToLock(lock& lock_detail, name& user);
     void addUserToAdminsVector(vector<name>& admins, name& user);
+    void addLockToUser(name sender, name user, uint8_t lock_id);
 
     TABLE lock_info {
       uint8_t  lock_id;
@@ -37,6 +38,7 @@ CONTRACT eosacl : public contract {
 
     locks_table _locks;
 
+// NOT SURE THIS IS NEEDED?....
     struct user {
       name  username;
       vector<uint8_t> lock_ids = {};
@@ -44,7 +46,8 @@ CONTRACT eosacl : public contract {
 
     TABLE user_info {
       name  username;
-      user user_details;
+      //user user_details;
+      vector<uint8_t> lock_ids = {};
       auto primary_key() const { return username.value; };
     };
     typedef multi_index<name("users"), user_info> users_table;
