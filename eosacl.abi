@@ -60,6 +60,24 @@
             ]
         },
         {
+            "name": "revokekey",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "target",
+                    "type": "name"
+                },
+                {
+                    "name": "lock_id",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
             "name": "sharekey",
             "base": "",
             "fields": [
@@ -101,6 +119,11 @@
         {
             "name": "claimlock",
             "type": "claimlock",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "revokekey",
+            "type": "revokekey",
             "ricardian_contract": ""
         },
         {

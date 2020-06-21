@@ -14,6 +14,7 @@ CONTRACT eosacl : public contract {
 
     ACTION claimlock(name owner, uint8_t lock_id);
     ACTION sharekey(name sender, name recipient, uint8_t lock_id);
+    ACTION revokekey(name admin, name target, uint8_t lock_id);
     ACTION checkaccess(name username, uint8_t lock_id);
 
   private:
@@ -25,9 +26,13 @@ CONTRACT eosacl : public contract {
       //lock (name user) : admins.insert(admins.begin(), user){}
     };
 
+    void _checkaccess(name username, uint8_t lock_id);
     void addUserToLock(lock& lock_detail, name& user);
     void addUserToAdminsVector(vector<name>& admins, name& user);
     void addLockToUser(name sender, name user, uint8_t lock_id);
+    
+    void removeUserFromLock(lock& lock_detail, name& user);
+    void removeUserFromAdminsVector(vector<name>& admins, name& user);
 
     TABLE lock_info { // 1 byte + ( 1 byte + (8 byte * admin_count) )
       uint8_t  lock_id; // 1 byte

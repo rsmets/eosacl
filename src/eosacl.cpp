@@ -25,11 +25,13 @@ ACTION eosacl::claimlock(name owner, uint8_t lock_id) {
 ACTION eosacl::sharekey(name sender, name recipient, uint8_t lock_id) {
   require_auth(sender);
 
+  print ("attempting to send ", name{recipient}, " a key to ", uint8_t{lock_id});
+
   // get the lock from the _locks table
-  auto& lock = _locks.get(lock_id, "lock does not exsist");
+  auto& lock = _locks.get(lock_id, "lock does not exist");
 
   // need to verify sender has a key to lock_id
-  checkaccess(sender, lock_id);
+  _checkaccess(sender, lock_id);
 
   // Modify the lock table entry, adding the recipient to the lock.admins vector
   _locks.modify(lock, sender, [&](auto& modified_lock) { // sender is paying for the storage
@@ -44,9 +46,35 @@ ACTION eosacl::sharekey(name sender, name recipient, uint8_t lock_id) {
   });
 }
 
+ACTION eosacl::revokekey(name admin, name target, uint8_t lock_id) {
+  require_auth(admin);
+
+  // get the lock from the _locks table
+  auto& lock = _locks.get(lock_id, "lock does not exist");
+
+  // need to verify sender has a key to lock_id
+  _checkaccess(admin, lock_id);
+
+  //_locks.erase(lock) { // sender is paying for the storage
+  
+  // Modify the lock table entry, removing the target from the lock.admins vector
+  _locks.modify(lock, admin, [&](auto& modified_lock) { // admin is paying for the storage
+    //struct lock& modified_lock_detials = modified_lock.lock_details;
+    //vector<name>& admins = modified_lock_detials.admins;
+    //admins.insert(admins.end(), recipient);
+
+    // update the users table and the lock table appropriately
+    removeUserFromLock(modified_lock.lock_details, target);
+  });
+}
+
 // Maybe want to make this 'logaccess'? so makes more sense to gatekeep...? but then wouldn't really be right either. can log before checking permissions.
 ACTION eosacl::checkaccess(name username, uint8_t lock_id) {
   require_auth(get_self()); // could do this but then *only* this contract owner could use (restrict to me and my frontend) otherwise could be abused...
+  _checkaccess(username, lock_id);
+}
+
+void eosacl::_checkaccess(name username, uint8_t lock_id) {
   print ("checking if ", name{username}, " has access to ", uint8_t{lock_id});
 
   // get the lock from the _locks table
@@ -64,6 +92,11 @@ ACTION eosacl::checkaccess(name username, uint8_t lock_id) {
 void eosacl::addUserToLock(lock& lock_detail, name& user) {
   // add user to the admins list on the lock
   addUserToAdminsVector(lock_detail.admins, user);
+}
+
+void eosacl::removeUserFromLock(lock& lock_detail, name& user) {
+  // add user to the admins list on the lock
+  removeUserFromAdminsVector(lock_detail.admins, user);
 }
 
 void eosacl::addLockToUser(name sender, name user, uint8_t lock_id) {
@@ -89,4 +122,34 @@ void eosacl::addUserToAdminsVector(vector<name>& admins, name& user) {
   admins.insert(admins.end(), user);
 }
 
-EOSIO_DISPATCH(eosacl, (claimlock)(sharekey)(checkaccess))
+void eosacl::removeUserFromAdminsVector(vector<name>& admins, name& user) {
+
+  //find the user in the admins vector
+  int admin_i_found = -1;
+  for (int admin_i = 0; admin_i < admins.size(); admin_i++) { 
+    auto admin = admins[admin_i];
+
+    if (admin.value == user.value) {
+      admin_i_found = admin_i;
+      break;
+    }
+  }
+
+  //check(condition, "error message.");
+  check(admin_i_found != -1, "user was not part of admins list");
+
+    // remove the card from the deck 
+  admins.erase(admins.begin() + admin_i_found); // need to get the iterate at the begining of the vector then just add the index to get where we want to be
+}
+
+/*
+void eosacl::eraseLock(lock& lock_detail, name& user) {
+    // get the lock from the _locks table
+  auto& lock = _locks.get(lock_id, "lock does not exsist");
+
+  // need to verify sender has a key to lock_id
+  checkaccess(admin, lock_id);
+}
+*/
+
+EOSIO_DISPATCH(eosacl, (claimlock)(sharekey)(checkaccess)(revokekey))
