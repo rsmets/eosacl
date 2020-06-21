@@ -27,14 +27,15 @@ CONTRACT eosacl : public contract {
     };
 
     void _checkaccess(name username, uint8_t lock_id);
-    void addUserToLock(lock& lock_detail, name& user);
-    void addUserToAdminsVector(vector<name>& admins, name& user);
-    void addLockToUser(name sender, name user, uint8_t lock_id);
+
+    void _addUserToLock(lock& lock_detail, name& user);
+    void _addUserToAdminsVector(vector<name>& admins, name& user);
+    void _addLockToUser(name sender, name user, uint8_t lock_id);
     
-    void removeUserFromLock(lock& lock_detail, name& user);
-    void removeUserFromAdminsVector(vector<name>& admins, name& user);
-    void removeLockFromUser(name admin, name user, uint8_t lock_id);
-    void removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t lock_id);
+    void _removeUserFromLock(lock& lock_detail, name& user);
+    void _removeUserFromAdminsVector(vector<name>& admins, name& user);
+    void _removeLockFromUser(name admin, name user, uint8_t lock_id);
+    void _removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t lock_id);
 
     TABLE lock_info { // 1 byte + ( 1 byte + (8 byte * admin_count) )
       uint8_t  lock_id; // 1 byte

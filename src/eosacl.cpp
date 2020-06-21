@@ -19,7 +19,7 @@ ACTION eosacl::claimlock(name owner, uint8_t lock_id) {
   });
 
   // update the user table user's entry with the new key, making the owner pay for it
-  addLockToUser(owner, owner, lock_id);
+  _addLockToUser(owner, owner, lock_id);
 }
 
 ACTION eosacl::sharekey(name sender, name recipient, uint8_t lock_id) {
@@ -39,10 +39,10 @@ ACTION eosacl::sharekey(name sender, name recipient, uint8_t lock_id) {
     //vector<name>& admins = modified_lock_detials.admins;
     //admins.insert(admins.end(), recipient);
 
-    addUserToLock(modified_lock.lock_details, recipient);
+    _addUserToLock(modified_lock.lock_details, recipient);
     
     // update the user table user's entry with the new key, making the sender pay for it
-    addLockToUser(sender, recipient, lock_id);
+    _addLockToUser(sender, recipient, lock_id);
   });
 }
 
@@ -68,10 +68,10 @@ ACTION eosacl::revokekey(name admin, name target, uint8_t lock_id) {
     // TODO validation should happen first so semi "transactional" in nature
 
     // update the users table appropriately
-    removeLockFromUser(admin, target, lock_id);
+    _removeLockFromUser(admin, target, lock_id);
 
     // update the locks table appropriately
-    removeUserFromLock(modified_lock.lock_details, target);
+    _removeUserFromLock(modified_lock.lock_details, target);
   });
 }
 
@@ -96,17 +96,17 @@ void eosacl::_checkaccess(name username, uint8_t lock_id) {
   // need to chekc the locks table as well?? shouldn't really but maybe should?
 }
 
-void eosacl::addUserToLock(lock& lock_detail, name& user) {
+void eosacl::_addUserToLock(lock& lock_detail, name& user) {
   // add user to the admins list on the lock
-  addUserToAdminsVector(lock_detail.admins, user);
+ _addUserToAdminsVector(lock_detail.admins, user);
 }
 
-void eosacl::removeUserFromLock(lock& lock_detail, name& user) {
+void eosacl::_removeUserFromLock(lock& lock_detail, name& user) {
   // add user to the admins list on the lock
-  removeUserFromAdminsVector(lock_detail.admins, user);
+  _removeUserFromAdminsVector(lock_detail.admins, user);
 }
 
-void eosacl::addLockToUser(name sender, name user, uint8_t lock_id) {
+void eosacl::_addLockToUser(name sender, name user, uint8_t lock_id) {
   // Find the user the _users table
   auto user_itr = _users.find(user.value);
   
@@ -125,7 +125,7 @@ void eosacl::addLockToUser(name sender, name user, uint8_t lock_id) {
   }
 }
 
-void eosacl::removeLockFromUser(name admin, name user, uint8_t lock_id) {
+void eosacl::_removeLockFromUser(name admin, name user, uint8_t lock_id) {
   // Find the user the _users table
   auto user_itr = _users.find(user.value);
 
@@ -137,12 +137,12 @@ void eosacl::removeLockFromUser(name admin, name user, uint8_t lock_id) {
     // need to find the index of the lock id
     //int 
     //modified_user.lock_ids.erase(modified_user.lock_ids.begin() + user_itr);
-    removeLockIdFromLockIdVector(modified_user.lock_ids, lock_id);
+    _removeLockIdFromLockIdVector(modified_user.lock_ids, lock_id);
   });
   
 }
 
-void eosacl::removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t lock_id) {
+void eosacl::_removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t lock_id) {
   //find the lock_id in the user's lock_ids vector
   int lock_id_i_found = -1;
   for (int lock_i = 0; lock_i < lock_ids.size(); lock_i++) { 
@@ -160,11 +160,11 @@ void eosacl::removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t loc
   lock_ids.erase(lock_ids.begin() + lock_id_i_found); // need to get the iterate at the begining of the vector then just add the index to get where we want to be
 }
 
-void eosacl::addUserToAdminsVector(vector<name>& admins, name& user) {
+void eosacl::_addUserToAdminsVector(vector<name>& admins, name& user) {
   admins.insert(admins.end(), user);
 }
 
-void eosacl::removeUserFromAdminsVector(vector<name>& admins, name& user) {
+void eosacl::_removeUserFromAdminsVector(vector<name>& admins, name& user) {
 
   //find the user in the admins vector
   int admin_i_found = -1;
