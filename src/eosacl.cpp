@@ -101,11 +101,6 @@ void eosacl::_addUserToLock(lock& lock_detail, name& user) {
  _addUserToAdminsVector(lock_detail.admins, user);
 }
 
-void eosacl::_removeUserFromLock(lock& lock_detail, name& user) {
-  // add user to the admins list on the lock
-  _removeUserFromAdminsVector(lock_detail.admins, user);
-}
-
 void eosacl::_addLockToUser(name sender, name user, uint8_t lock_id) {
   // Find the user the _users table
   auto user_itr = _users.find(user.value);
@@ -125,6 +120,15 @@ void eosacl::_addLockToUser(name sender, name user, uint8_t lock_id) {
   }
 }
 
+void eosacl::_addUserToAdminsVector(vector<name>& admins, name& user) {
+  admins.insert(admins.end(), user);
+}
+
+void eosacl::_removeUserFromLock(lock& lock_detail, name& user) {
+  // add user to the admins list on the lock
+  _removeUserFromAdminsVector(lock_detail.admins, user);
+}
+
 void eosacl::_removeLockFromUser(name admin, name user, uint8_t lock_id) {
   // Find the user the _users table
   auto user_itr = _users.find(user.value);
@@ -133,10 +137,6 @@ void eosacl::_removeLockFromUser(name admin, name user, uint8_t lock_id) {
 
   // Modify a user record if it exists
   _users.modify(user_itr, admin, [&](auto& modified_user) { // admin or user? admin pays... so admin?
-
-    // need to find the index of the lock id
-    //int 
-    //modified_user.lock_ids.erase(modified_user.lock_ids.begin() + user_itr);
     _removeLockIdFromLockIdVector(modified_user.lock_ids, lock_id);
   });
   
@@ -158,10 +158,6 @@ void eosacl::_removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t lo
   check(lock_id_i_found != -1, "user was not part of admins list");
 
   lock_ids.erase(lock_ids.begin() + lock_id_i_found); // need to get the iterate at the begining of the vector then just add the index to get where we want to be
-}
-
-void eosacl::_addUserToAdminsVector(vector<name>& admins, name& user) {
-  admins.insert(admins.end(), user);
 }
 
 void eosacl::_removeUserFromAdminsVector(vector<name>& admins, name& user) {
