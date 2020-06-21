@@ -33,6 +33,8 @@ CONTRACT eosacl : public contract {
     
     void removeUserFromLock(lock& lock_detail, name& user);
     void removeUserFromAdminsVector(vector<name>& admins, name& user);
+    void removeLockFromUser(name admin, name user, uint8_t lock_id);
+    void removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t lock_id);
 
     TABLE lock_info { // 1 byte + ( 1 byte + (8 byte * admin_count) )
       uint8_t  lock_id; // 1 byte

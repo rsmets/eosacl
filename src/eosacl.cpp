@@ -52,10 +52,12 @@ ACTION eosacl::revokekey(name admin, name target, uint8_t lock_id) {
   // get the lock from the _locks table
   auto& lock = _locks.get(lock_id, "lock does not exist");
 
+  // get the user from the _users table
+  auto& user = _users.get(target.value, "user does not exist");
+
   // need to verify sender has a key to lock_id
   _checkaccess(admin, lock_id);
 
-  //_locks.erase(lock) { // sender is paying for the storage
   
   // Modify the lock table entry, removing the target from the lock.admins vector
   _locks.modify(lock, admin, [&](auto& modified_lock) { // admin is paying for the storage
@@ -63,7 +65,12 @@ ACTION eosacl::revokekey(name admin, name target, uint8_t lock_id) {
     //vector<name>& admins = modified_lock_detials.admins;
     //admins.insert(admins.end(), recipient);
 
-    // update the users table and the lock table appropriately
+    // TODO validation should happen first so semi "transactional" in nature
+
+    // update the users table appropriately
+    removeLockFromUser(admin, target, lock_id);
+
+    // update the locks table appropriately
     removeUserFromLock(modified_lock.lock_details, target);
   });
 }
@@ -118,6 +125,41 @@ void eosacl::addLockToUser(name sender, name user, uint8_t lock_id) {
   }
 }
 
+void eosacl::removeLockFromUser(name admin, name user, uint8_t lock_id) {
+  // Find the user the _users table
+  auto user_itr = _users.find(user.value);
+
+  check(user_itr != _users.end(), "user not found in _users table");
+
+  // Modify a user record if it exists
+  _users.modify(user_itr, admin, [&](auto& modified_user) { // admin or user? admin pays... so admin?
+
+    // need to find the index of the lock id
+    //int 
+    //modified_user.lock_ids.erase(modified_user.lock_ids.begin() + user_itr);
+    removeLockIdFromLockIdVector(modified_user.lock_ids, lock_id);
+  });
+  
+}
+
+void eosacl::removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t lock_id) {
+  //find the lock_id in the user's lock_ids vector
+  int lock_id_i_found = -1;
+  for (int lock_i = 0; lock_i < lock_ids.size(); lock_i++) { 
+    auto lock_id_from_vector = lock_ids[lock_i];
+
+    if (lock_id == lock_id_from_vector) {
+      lock_id_i_found = lock_i;
+      break;
+    }
+  }
+
+  //check(condition, "error message.");
+  check(lock_id_i_found != -1, "user was not part of admins list");
+
+  lock_ids.erase(lock_ids.begin() + lock_id_i_found); // need to get the iterate at the begining of the vector then just add the index to get where we want to be
+}
+
 void eosacl::addUserToAdminsVector(vector<name>& admins, name& user) {
   admins.insert(admins.end(), user);
 }
@@ -138,7 +180,6 @@ void eosacl::removeUserFromAdminsVector(vector<name>& admins, name& user) {
   //check(condition, "error message.");
   check(admin_i_found != -1, "user was not part of admins list");
 
-    // remove the card from the deck 
   admins.erase(admins.begin() + admin_i_found); // need to get the iterate at the begining of the vector then just add the index to get where we want to be
 }
 

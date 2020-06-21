@@ -2,6 +2,11 @@
     "files.associations": {
         "typeinfo": "cpp",
         "__locale": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "__functional_03": "cpp",
+        "functional": "cpp",
+        "vector": "cpp",
+        "iosfwd": "cpp",
+        "iterator": "cpp"
     }
 }
