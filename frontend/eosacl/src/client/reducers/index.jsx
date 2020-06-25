@@ -34,6 +34,17 @@ const username = (store, action) => {
   return store || { value: "" };
 };
 
+const password = (store, action) => {
+  if (action.type === "PASS_WORD") {
+    console.log("Working: ", action.value)
+    return {
+      value: action.value
+    };
+  }
+
+  return store || { value: "" };
+};
+
 const textarea = (store, action) => {
   if (action.type === "INPUT_TEXT_AREA") {
     return {
@@ -68,5 +79,6 @@ export default combineReducers({
   username,
   textarea,
   selectedOption,
-  showFakeComp
+  showFakeComp,
+  password
 });

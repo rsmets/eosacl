@@ -23,6 +23,13 @@ export const inputName = value => {
   };
 };
 
+export const passwordName = value => {
+  return {
+    type: "PASS_WORD",
+    value
+  };
+};
+
 export const inputTextarea = value => {
   return {
     type: "INPUT_TEXT_AREA",
