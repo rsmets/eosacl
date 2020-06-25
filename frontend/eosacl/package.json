@@ -1,0 +1,62 @@
+{
+  "name": "eosacl",
+  "version": "0.0.1",
+  "description": "",
+  "homepage": "",
+  "author": {
+    "name": "Ray Smets",
+    "email": "rayjsmets@gmail.com",
+    "url": ""
+  },
+  "contributors": [],
+  "files": [
+    "server",
+    "src",
+    "lib",
+    "dist"
+  ],
+  "main": "lib/server/index.js",
+  "keywords": [
+    "blockchain",
+    "acl",
+    "eos"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rsmets/eosacl.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">= 8",
+    "npm": ">= 5"
+  },
+  "scripts": {
+    "build": "clap build",
+    "prod-start": "NODE_ENV=production clap -n -x electrode/build prod",
+    "start": "if test \"$NODE_ENV\" = \"production\"; then npm run prod-start; else clap dev; fi",
+    "test": "clap check",
+    "coverage": "clap check",
+    "prod": "echo 'Starting standalone server in PROD mode'; NODE_ENV=production node ./lib/server/",
+    "heroku-postbuild": "clap build"
+  },
+  "dependencies": {
+    "@loadable/component": "^5.7.0",
+    "@loadable/server": "^5.9.0",
+    "bluebird": "^3.4.6",
+    "electrode-archetype-react-app": "7.0.0-beta7.0",
+    "electrode-confippet": "^1.5.0",
+    "electrode-react-webapp": "^3.2.0",
+    "electrode-redux-router-engine": "^3.0.0",
+    "electrode-ui-config": "^1.1.2",
+    "express": "^4.0.0",
+    "lodash": "^4.17.11",
+    "milligram": "^1.3.0",
+    "react-router-config": "^5.1.1",
+    "react-router-dom": "^5.1.2"
+  },
+  "devDependencies": {
+    "@loadable/babel-plugin": "^5.10.0",
+    "@loadable/webpack-plugin": "^5.7.1",
+    "electrode-archetype-react-app-dev": "7.0.0-beta7.0"
+  }
+}
