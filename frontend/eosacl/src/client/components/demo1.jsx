@@ -5,6 +5,7 @@ import { Nav } from "./nav";
 import { inputName, inputTextarea, selectOption, passwordName } from "../actions";
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import demoStyle from "../styles/demo1.css"; // eslint-disable-line no-unused-vars
+import ApiService from '../services/ApiService';
 
 class Demo1 extends Component {
   constructor(props) {
@@ -18,6 +19,29 @@ class Demo1 extends Component {
     };
   }
 
+  sharekey() {
+    // alert("hi");
+    ApiService.sharekey('bob', 'alice', 1, 20).then(() => {
+      debugger;
+      console.log('done!')
+    }).catch(error => {
+      debugger;
+      console.log(`error ${error}`);
+    });
+  }
+
+  claimlock() {
+    // alert("hi");
+    debugger;
+    ApiService.claimlock('bob', 2).then(() => {
+      debugger;
+      console.log('done!')
+    }).catch(error => {
+      debugger;
+      console.log(`error ${error}`);
+    });
+  }
+
   render() {
     const { dispatch } = this.props;
     return (
@@ -25,6 +49,7 @@ class Demo1 extends Component {
         <Nav {...this.props} />
         <div styleName="demoStyle.container">
           <h2>Login</h2>
+          {/* <form onSubmit={this.test}> */}
           <form>
             <fieldset>
               <label htmlFor="nameField">Name</label>
@@ -47,7 +72,8 @@ class Demo1 extends Component {
                   dispatch(passwordName(e.target.value));
                 }}
               />
-              <input type="submit" value="Send" />
+              <input type="submit" value="Send" onClick={this.claimlock}/>
+              {/* <input type="submit" value="Send"/> */}
             </fieldset>
           </form>
         </div>
