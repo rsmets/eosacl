@@ -23,6 +23,27 @@ export const inputName = value => {
   };
 };
 
+export const setUser = value => {
+  return {
+    type: "SET_USER",
+    value
+  };
+};
+
+export const updateAdminLockIds = value => {
+  return {
+    type: "ADMIN_LOCK_IDS",
+    value
+  };
+};
+
+export const updateUserLockIds = value => {
+  return {
+    type: "USER_LOCK_IDS",
+    value
+  };
+};
+
 export const passwordName = value => {
   return {
     type: "PASS_WORD",

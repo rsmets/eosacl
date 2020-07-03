@@ -56,8 +56,9 @@ class Home extends React.Component {
           </h2>
         </section>
 
-        <Login/>
-
+<Login/>
+    {/* {this.props.username ? <Login/> : <DemoStates/>} */}
+{/* 
         <div styleName="custom.docs-section">
           <DemoStates />
         </div>
@@ -81,7 +82,7 @@ class Home extends React.Component {
 
         <div styleName="custom.docs-section">
           <DemoDynamicImport/>
-        </div>
+        </div> */}
 
       </div>
     );

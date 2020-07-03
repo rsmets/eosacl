@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+// import UserReducer from './UserReducer';
 
 const checkBox = (store, action) => {
   if (action.type === "TOGGLE_CHECK") {
@@ -32,6 +33,31 @@ const username = (store, action) => {
   }
 
   return store || { value: "" };
+};
+
+const adminLockIds = (store, action) => {
+  if (action.type === "ADMIN_LOCK_IDS") {
+    console.log("Working: ", action.value)
+
+    return {
+      value: action.value
+    };
+  }
+
+  return store || { value: [] };
+};
+
+
+const userLockIds = (store, action) => {
+  if (action.type === "USER_LOCK_IDS") {
+    console.log("Working: ", action.value)
+
+    return {
+      value: action.value
+    };
+  }
+
+  return store || { value: [] };
 };
 
 const password = (store, action) => {
@@ -73,12 +99,49 @@ const showFakeComp = (store, action) => {
   return store || { value: false };
 };
 
+const user = (store, action) => {
+  console.log(action.type)
+  if (action.type === "SET_USER") {
+    // return Object.assign({}, state, {
+    //   // If the name is not specified, do not change it
+    //   // The places that will change the name is login
+    //   // In that cases, the `win_count`, `lost_count`, `game` will be reset
+    //   name: typeof action.name === "undefined" ? state.name : action.name,
+    //   lock_ids: action.lock_ids || initialState.lock_ids,
+    //   access_only_lock_ids: action.access_only_lock_ids || initialState.access_only_lock_ids,
+    // });
+    console.log("Working: ", action.value)
+    debugger
+    // return  {value: {
+    //   // If the name is not specified, do not change it
+    //   // The places that will change the name is login
+    //   // In that cases, the `win_count`, `lost_count`, `game` will be reset
+    //   name: action.name || '',
+    //   lock_ids: action.lock_ids || [],
+    //   access_only_lock_ids: action.access_only_lock_ids || [],
+    // }};
+    return  {
+      // If the name is not specified, do not change it
+      // The places that will change the name is login
+      // In that cases, the `win_count`, `lost_count`, `game` will be reset
+      name: action.value.name || '',
+      lock_ids: action.value.lock_ids || [],
+      access_only_lock_ids: action.value.access_only_lock_ids || [],
+    };
+  }
+  return store || {}
+}
+
 export default combineReducers({
   checkBox,
   number,
   username,
+  adminLockIds,
+  userLockIds,
   textarea,
   selectedOption,
   showFakeComp,
-  password
+  password,
+  // user: UserReducer
+  user
 });

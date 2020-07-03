@@ -2,6 +2,8 @@ import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 const { TextEncoder, TextDecoder } = require('text-encoding');
 
+const ENDPOINT = "http://localhost:8888"
+const CONTRACT_NAME = 'eosacl'
 // const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
 // // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
 // const rpc = new JsonRpc("http://localhost:8888", {});
@@ -13,7 +15,7 @@ const { TextEncoder, TextDecoder } = require('text-encoding');
 async function takeAction(action, dataValue) {
   const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
   // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
-  const rpc = new JsonRpc("http://localhost:8888", {});
+  const rpc = new JsonRpc(ENDPOINT, {});
   const signatureProvider = new JsSignatureProvider([privateKey]);
   // debugger;
   
@@ -27,7 +29,7 @@ async function takeAction(action, dataValue) {
     const resultWithConfig = await api.transact({
       actions: [{
         // account: process.env.REACT_APP_EOS_CONTRACT_NAME,
-        account: 'eosacl',
+        account: CONTRACT_NAME,
         name: action,
         authorization: [{
           // actor: localStorage.getItem("cardgame_account"),
@@ -111,18 +113,27 @@ static revokekey() {
  }
 
   static async getUserByName(username) {
+    debugger;
+    console.log(1)
     try {
-      const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
+      // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
+      const rpc = new JsonRpc(ENDPOINT);
       const result = await rpc.get_table_rows({
         "json": true,
-        "code": process.env.REACT_APP_EOS_CONTRACT_NAME,    // contract who owns the table
-        "scope": process.env.REACT_APP_EOS_CONTRACT_NAME,   // scope of the table
+        // "code": process.env.REACT_APP_EOS_CONTRACT_NAME,    // contract who owns the table
+        // "scope": process.env.REACT_APP_EOS_CONTRACT_NAME,   // scope of the table
+        "code": CONTRACT_NAME,    // contract who owns the table
+        "scope": CONTRACT_NAME,   // scope of the table
         "table": "users",    // name of the table as specified by the contract abi
         "limit": 1,
         "lower_bound": username,
       });
+      console.log(2)
+      debugger
       return result.rows[0]; //eosjs returns more than just rows... but here only care about that
     } catch (err) {
+      console.log(3)
+      debugger
       console.error(err);
     }
   }

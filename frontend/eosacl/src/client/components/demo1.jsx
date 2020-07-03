@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Nav } from "./nav";
-import { inputName, inputTextarea, selectOption, passwordName, adminLockIds, userLockIds } from "../actions";
+import { inputName, inputTextarea, selectOption, passwordName, updateAdminLockIds, updateUserLockIds, setUser } from "../actions";
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import demoStyle from "../styles/demo1.css"; // eslint-disable-line no-unused-vars
 import ApiService from '../services/ApiService';
@@ -17,6 +17,8 @@ class Demo1 extends Component {
     this.state = {
       username: { value: "" },
       passwordVal: { value: "" },
+      adminLockIds: { value: [] },
+      userLockIds: { value: [] },
       textarea: { value: "" },
       selectedOption: { value: "0-13" },
       lockId: { value: "" },
@@ -24,6 +26,33 @@ class Demo1 extends Component {
 
     this.claimlock = this.claimlock.bind(this);
     this.test = this.test.bind(this);
+  //   this.loadUser = this.loadUser.bind(this);
+  //   // Call `loadUser` before mounting the app
+  //   this.loadUser();
+  // }
+
+  // // Get latest user object from blockchain
+  // loadUser() {
+  //   // Extract `setUser` of `UserAction` and `user.name` of UserReducer from redux
+  //   // const { setUser, username } = this.props;
+  //   const { dispatch } = this.props;
+  //   const { username } = this.props;
+  //   debugger;
+  //   // Send request the blockchain by calling the ApiService,
+  //   // Get the user object and store the `win_count`, `lost_count` and `game_data` object
+  //   return ApiService.getUserByName(username).then(user => {
+  //     debugger;
+  //     dispatch(inputName(user.username));
+  //     dispatch(adminLockIds(user.lock_ids));
+  //     dispatch(userLockIds(user.access_only_lock_ids));
+  //     // setUser({
+  //     //   lock_ids: user.lock_ids,
+  //     //   access_only_lock_ids: user.access_only_lock_ids,
+  //     //   win_count: user.win_count,
+  //     //   lost_count: user.lost_count,
+  //     //   game: user.game_data,
+  //     // });
+  //   });
   }
 
   handleSubmit(event) {
@@ -125,6 +154,8 @@ render() {
           </div>
           <Demo2
             username= {this.props.username}
+            adminLockIds= {this.props.adminLockIds}
+            userLockIds= {this.props.userLockIds}
           />
         </div>
       );
@@ -133,6 +164,8 @@ render() {
 
 Demo1.propTypes = {
   username: PropTypes.string,
+  // adminLockIds: PropTypes.array,
+  // userLockIds: PropTypes.array,
   textarea: PropTypes.string,
   selectedOption: PropTypes.string,
   dispatch: PropTypes.func.isRequired
@@ -141,6 +174,9 @@ Demo1.propTypes = {
 const mapStateToProps = state => {
   return {
     username: state.username.value,
+    setUser,
+    // adminLockIds: state.adminLockIds.value,
+    // userLockIds: state.userLockIds.value,
     textarea: state.textarea.value,
     selectedOption: state.selectedOption.value
   };
