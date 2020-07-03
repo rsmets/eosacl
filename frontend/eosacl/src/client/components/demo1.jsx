@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Nav } from "./nav";
-import { inputName, inputTextarea, selectOption, passwordName } from "../actions";
+import { inputName, inputTextarea, selectOption, passwordName, adminLockIds, userLockIds } from "../actions";
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import demoStyle from "../styles/demo1.css"; // eslint-disable-line no-unused-vars
 import ApiService from '../services/ApiService';
 import AccessSharing from './access-sharing';
 import axios from 'axios';
+import Demo2 from "./demo2"
 
 class Demo1 extends Component {
   constructor(props) {
@@ -97,7 +98,7 @@ render() {
         <div styleName="custom.container">
           <Nav {...this.props} />
           <div styleName="demoStyle.container">
-            <h2>Login</h2>
+            <h2>Access Management</h2>
             {/* <form onSubmit={this.test}> */}
             {/* <form>
               <input type="submit" value="ShareKey" onClick={this.sharekey}/>
@@ -122,6 +123,9 @@ render() {
               <input type="submit" value="ClaimLock"/>
               </form>
           </div>
+          <Demo2
+            username= {this.props.username}
+          />
         </div>
       );
     }
