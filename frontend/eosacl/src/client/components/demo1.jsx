@@ -106,7 +106,9 @@ class Demo1 extends Component {
       console.log('done!')
     }).catch(error => {
       debugger;
-      console.log(`error ${error}`);
+      const errorMessage = `Error: ${error.message}}`
+      console.log(`error ${errorMessage}`);
+      alert(errorMessage)
     });
   }
 
