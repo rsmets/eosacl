@@ -2,17 +2,28 @@ import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 const { TextEncoder, TextDecoder } = require('text-encoding');
 
+// const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
+// // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
+// const rpc = new JsonRpc("http://localhost:8888", {});
+// const signatureProvider = new JsSignatureProvider([privateKey]);
+// debugger;
+// const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+
 // Main action call to blockchain
 async function takeAction(action, dataValue) {
   const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
   // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
   const rpc = new JsonRpc("http://localhost:8888", {});
   const signatureProvider = new JsSignatureProvider([privateKey]);
-  debugger;
-  const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+  // debugger;
+  
 
   // Main call to blockchain after setting action, account_name and data
   try {
+    console.log(1)
+    const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+    console.log(2)
+    debugger;
     const resultWithConfig = await api.transact({
       actions: [{
         // account: process.env.REACT_APP_EOS_CONTRACT_NAME,
@@ -25,14 +36,18 @@ async function takeAction(action, dataValue) {
         }],
         data: dataValue,
       }]
-    }, {
+    }
+    , {
       blocksBehind: 3,
       expireSeconds: 30,
-    });
+    }
+    );
     debugger;
+    console.log(3)
     return resultWithConfig;
   } catch (err) {
     debugger;
+    console.log(4)
     throw(err)
   }
 }
@@ -75,15 +90,15 @@ class ApiService {
     });
   }
 
-  static claimlock() {
-    debugger;
+  static claimlock(owner, lock_id) {
+    // debugger;
       // return takeAction("claimlock", {user: localStorage.getItem('cardgame_account')});
       return takeAction("claimlock", {owner, lock_id});
   }
 
   static sharekey(sender, recipient, lock_id, role) {
     // return takeAction("sharekey", {user: localStorage.getItem('cardgame_account'), player_card_index: cardHandIndex});
-    debugger;
+    // debugger;
     return takeAction("sharekey", {sender, recipient, lock_id, role});
 }
 
