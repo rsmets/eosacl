@@ -83,8 +83,12 @@ class Demo2 extends Component {
           <ul>
             {/* adminLockIds: {this.props.adminLockIds}
             userLockIds: {this.props.userLockIds} */}
-            adminLockIds: {user ? user.lock_ids: 'none'}
-            userLockIds: {user ? user.access_only_lock_ids: 'none'}
+            adminLockIds: {user && user.lock_ids ? 
+              user.lock_ids.map(id => <ul>{id}</ul>)
+              : 'none'}
+            userLockIds: {user && user.access_only_lock_ids ? 
+              user.access_only_lock_ids.map(id => <ul>{id}</ul>)
+              : 'none'}
           </ul>
            {/* {this.state.locks.map((lock) => {
                 console.log("AdminList: ", lock)
