@@ -21,6 +21,7 @@ import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import electrodePng from "../images/electrode.png";
 import DemoStates from "./demo-states";
 import DemoPureStates from "./demo-pure-states";
+import Login from "./login";
 import { DemoButtons } from "./demo-buttons";
 import DemoDynamicImport from "./demo-dynamic-import";
 import { Nav } from "./nav";
@@ -54,6 +55,8 @@ class Home extends React.Component {
             </a>
           </h2>
         </section>
+
+        <Login/>
 
         <div styleName="custom.docs-section">
           <DemoStates />
