@@ -16,6 +16,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import "../styles/raleway.css";
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import electrodePng from "../images/electrode.png";
@@ -37,6 +38,10 @@ import config from "electrode-ui-config";
 class Home extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      username: {value: ""}
+    }
   }
 
   render() {
@@ -50,7 +55,8 @@ class Home extends React.Component {
           <h2>
             <span>Hello from </span>
             <a href="https://github.com/electrode-io">
-              {"Electrode"}
+              {/* {1==2 ? "Electrode": 'eosacl-dapp'} */}
+              {this.props.username ? this.props.username : 'eosacl dapp'}
               <img src={electrodePng} />
             </a>
           </h2>
@@ -89,9 +95,12 @@ class Home extends React.Component {
   }
 }
 
-Home.propTypes = {};
+Home.propTypes = {username: PropTypes.string};
 
-const mapStateToProps = state => state;
+// const mapStateToProps = state => state;
+const mapStateToProps = state => {
+  username: state.username.value
+};
 
 export default connect(
   mapStateToProps,

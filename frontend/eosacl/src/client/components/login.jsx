@@ -6,6 +6,38 @@ import { inputName, inputTextarea, selectOption, passwordName, setUser } from ".
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import demoStyle from "../styles/demo1.css"; // eslint-disable-line no-unused-vars
 import ApiService from '../services/ApiService';
+// import ScatterService from '../services/Scatter';
+
+import ScatterJS from 'scatterjs-core';
+// import ScatterEOS from 'scatterjs-plugin-eosjs';
+
+const networkJson = {
+  blockchain:'eos',
+  host:'localhost',
+  port:8888,
+  protocol:'http',
+  chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+};
+
+// // Don't forget to tell ScatterJS which plugins you are using.
+// ScatterJS.plugins( new ScatterEOS() );
+
+// const scatter = ScatterJS.scatter.connect("eosacl").then(connected => {
+//     // User does not have Scatter Desktop, Mobile or Classic installed.
+//     if(!connected) return false;
+
+//     const scatter = ScatterJS.scatter;
+//     // -----------------------
+//     // TODO store in state because this has overhead.
+//     // -----------------------
+
+//     window.ScatterJS = null;
+//     // -----------------------
+//     // ALWAYS DO THIS
+//     // -----------------------
+
+//     return scatter;
+// });
 
 class Login extends Component {
   constructor(props) {
@@ -19,6 +51,7 @@ class Login extends Component {
     };
 //   }
     this.loadUser = this.loadUser.bind(this);
+    this.login = this.login.bind(this);
     // Call `loadUser` before mounting the app
     // this.loadUser();
   }
@@ -46,15 +79,47 @@ class Login extends Component {
 
 }
 
+  login(event) {
+    event.preventDefault();
+    // debugger;
+    // const account = ScatterService.scatterConnect();
+
+    const { dispatch, username } = this.props;
+    const network = ScatterJS.Network.fromJson(networkJson);
+    // return ScatterJS.scatter.connect("bob", {network}).then(connected => {
+    return ScatterJS.scatter.connect(username, {network}).then(connected => {
+        // User does not have Scatter Desktop, Mobile or Classic installed.
+        debugger;
+        if(!connected) {
+            alert(`no scatter!`);
+            return false;
+        }
+        ScatterJS.login().then(id => {
+            debugger;
+            if (!id) {
+                alert('no id!')
+                return false;
+            }
+
+            // dispatch(authenticated(true));
+            // dispatch(inputName(ScatterJS.identity.name));
+            dispatch(inputName(ScatterJS.identity.accounts[0].name));
+        })
+
+     })
+  }
+
   render() {
-    const { dispatch } = this.props;
+    const { dispatch, username } = this.props;
     return (
       <div styleName="custom.container">
         <Nav {...this.props} />
         <div styleName="demoStyle.container">
           <h2>Login</h2>
-          <form onSubmit={this.loadUser}>
-          {/* <form> */}
+          {/* {username ? `${username} is currently logged in`: <label htmlFor="nameField">Name</label>} */}
+          {/* {username ? `${username} is currently logged in`: <label></label>} */}
+          {/* <form onSubmit={this.loadUser}> */}
+          <form>
             <fieldset>
               <label htmlFor="nameField">Name</label>
               <input
@@ -75,8 +140,8 @@ class Login extends Component {
                   dispatch(passwordName(e.target.value));
                 }}
               />
-              {/* <input type="submit" value="Send" onClick={this.loadUser}/> */}
-              <input type="submit" value="Send"/>
+              <input type="submit" value="Send" onClick={this.login}/>
+              {/* <input type="submit" value="Send"/> */}
             </fieldset>
           </form>
         </div>

@@ -33,7 +33,7 @@ async function takeAction(action, dataValue) {
         name: action,
         authorization: [{
           // actor: localStorage.getItem("cardgame_account"),
-          actor: 'bob',
+          actor: 'bob', // account paying for resources
           permission: 'active',
         }],
         data: dataValue,

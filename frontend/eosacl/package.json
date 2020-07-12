@@ -55,7 +55,8 @@
     "lodash": "^4.17.11",
     "milligram": "^1.3.0",
     "react-router-config": "^5.1.1",
-    "react-router-dom": "^5.1.2"
+    "react-router-dom": "^5.1.2",
+    "scatterjs-core": "^2.7.18"
   },
   "devDependencies": {
     "@loadable/babel-plugin": "^5.10.0",
