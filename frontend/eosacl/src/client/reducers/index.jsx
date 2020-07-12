@@ -111,7 +111,7 @@ const user = (store, action) => {
     //   access_only_lock_ids: action.access_only_lock_ids || initialState.access_only_lock_ids,
     // });
     console.log("Working: ", action.value)
-    debugger
+    // debugger
     // return  {value: {
     //   // If the name is not specified, do not change it
     //   // The places that will change the name is login
@@ -132,6 +132,28 @@ const user = (store, action) => {
   return store || {}
 }
 
+const targetUsername = (store, action) => {
+  if (action.type === "TARGET_NAME") {
+    // debugger;
+    return {
+      value: action.value
+    };
+  }
+
+  return store || { value: "" };
+};
+
+const targetRole = (store, action) => {
+  if (action.type === "TARGET_ROLE") {
+    // debugger;
+    return {
+      value: action.value
+    };
+  }
+
+  return store || { value: 10 };
+};
+
 export default combineReducers({
   checkBox,
   number,
@@ -143,5 +165,7 @@ export default combineReducers({
   showFakeComp,
   password,
   // user: UserReducer
-  user
+  user,
+  targetUsername,
+  targetRole,
 });

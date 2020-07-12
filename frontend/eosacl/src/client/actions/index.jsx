@@ -71,3 +71,17 @@ export const setShowFakeComp = value => {
     value
   };
 };
+
+export const updateTargetUsername = value => {
+  return {
+    type: "TARGET_NAME",
+    value
+  };
+};
+
+export const updateTargetRole = value => {
+  return {
+    type: "TARGET_ROLE",
+    value
+  };
+};

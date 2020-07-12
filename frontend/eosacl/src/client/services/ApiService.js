@@ -25,7 +25,7 @@ async function takeAction(action, dataValue) {
     console.log(1)
     const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
     console.log(2)
-    debugger;
+    // debugger;
     const resultWithConfig = await api.transact({
       actions: [{
         // account: process.env.REACT_APP_EOS_CONTRACT_NAME,
@@ -44,7 +44,7 @@ async function takeAction(action, dataValue) {
       expireSeconds: 30,
     }
     );
-    debugger;
+    // debugger;
     console.log(3)
     return resultWithConfig;
   } catch (err) {
@@ -113,7 +113,7 @@ static revokekey() {
  }
 
   static async getUserByName(username) {
-    debugger;
+    // debugger;
     console.log(1)
     try {
       // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
@@ -129,7 +129,7 @@ static revokekey() {
         "lower_bound": username,
       });
       console.log(2)
-      debugger
+      // debugger
       return result.rows[0]; //eosjs returns more than just rows... but here only care about that
     } catch (err) {
       console.log(3)

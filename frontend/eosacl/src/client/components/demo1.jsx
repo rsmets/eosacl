@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Nav } from "./nav";
-import { inputName, inputTextarea, selectOption, passwordName, updateAdminLockIds, updateUserLockIds, setUser } from "../actions";
+import { inputName, inputTextarea, selectOption, passwordName, updateAdminLockIds, updateUserLockIds, setUser, updateTargetUsername, updateTargetRole } from "../actions";
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import demoStyle from "../styles/demo1.css"; // eslint-disable-line no-unused-vars
 import ApiService from '../services/ApiService';
@@ -22,9 +22,12 @@ class Demo1 extends Component {
       textarea: { value: "" },
       selectedOption: { value: "0-13" },
       lockId: { value: "" },
+      targetUsername: { value: ""},
+      targetRole: { value: 10},
     };
 
     this.claimlock = this.claimlock.bind(this);
+    this.sharekey = this.sharekey.bind(this);
     this.test = this.test.bind(this);
   //   this.loadUser = this.loadUser.bind(this);
   //   // Call `loadUser` before mounting the app
@@ -85,12 +88,20 @@ class Demo1 extends Component {
 
   sharekey() {
     // alert("hi");
-    ApiService.sharekey('bob', 'alice', 2, 20).then(() => {
+    event.preventDefault();
+    const {username, targetUsername, targetRole, textarea} = this.props;
+    const lockId = textarea;
+    
+    debugger;
+    // ApiService.sharekey('bob', 'alice', 2, 20).then(() => {
+    ApiService.sharekey(username, targetUsername, lockId, targetRole).then((result) => {
       debugger;
       console.log('done!')
     }).catch(error => {
       debugger;
-      console.log(`error ${error}`);
+      const errorMessage = `Error: ${error.message}`
+      console.log(`error ${errorMessage}`);
+      alert(errorMessage)
     });
   }
 
@@ -101,12 +112,12 @@ class Demo1 extends Component {
     this.test().then(e => {console.log('asld;j')})
     const lockId = parseInt(this.props.textarea);
     // const lockId = parseInt(this.state.textarea);
-    ApiService.claimlock('bob', lockId).then(() => {
+    ApiService.claimlock('bob', lockId).then((result) => {
       debugger;
       console.log('done!')
     }).catch(error => {
       debugger;
-      const errorMessage = `Error: ${error.message}}`
+      const errorMessage = `Error: ${error.message}`
       console.log(`error ${errorMessage}`);
       alert(errorMessage)
     });
@@ -129,14 +140,57 @@ render() {
         <div styleName="custom.container">
           <Nav {...this.props} />
           <div styleName="demoStyle.container">
-            <h2>Access Management</h2>
+          <h2>{`${this.props.username}'s`} Access Management</h2>
             {/* <form onSubmit={this.test}> */}
             {/* <form>
               <input type="submit" value="ShareKey" onClick={this.sharekey}/>
             </form> */}
-            {/* <form> */}
-            <form onSubmit={this.claimlock}>
+            <form>
+            {/* <form onSubmit={this.claimlock}> */}
+            <label htmlFor="lockIdField">Lock ID</label>
             <input
+                  type="text"
+                  // type="password"
+                  placeholder="Lock ID"
+                  // id="passwordField"
+                  // id = "lockIdInput"
+                  value={this.props.textarea}
+                  // value={this.state.textarea}
+                  onChange={e => {
+                    // debugger;
+                    dispatch(inputTextarea(e.target.value));
+                    // this.setState({textarea: e.target.value})
+                  }}
+                />
+              {/* <input type="submit" value="ClaimLock" onClick={this.claimlock}/> */}
+              {/* <input type="submit" value="ClaimLock"/> */}
+
+              {/* <fieldset> */}
+              <label htmlFor="nameField">Target User</label>
+              <input
+                type="text"
+                placeholder="EOS Account Username"
+                id="targetUserField"
+                value={this.props.targetUsername}
+                onChange={event => {
+                  dispatch(updateTargetUsername(event.target.value));
+                }}
+              />
+              <label htmlFor="roleField">Target Role</label>
+              <input
+                type="text"
+                placeholder="Role you would like to grant to target user"
+                id="targetRoleField"
+                value={this.props.targetRole}
+                onChange={e => {
+                  dispatch(updateTargetRole(e.target.value));
+                }}
+              />
+              <input type="submit" value="Share Key" onClick={this.sharekey}/>
+              {/* <input type="submit" value="Send"/> */}
+              <input type="submit" value="Claim Lock" onClick={this.claimlock}/>
+            {/* </fieldset> */}
+              {/* <input
                   type="text"
                   // type="password"
                   // placholder="Rays Dick Size"
@@ -150,8 +204,7 @@ render() {
                     // this.setState({textarea: e.target.value})
                   }}
                 />
-              {/* <input type="submit" value="ClaimLock" onClick={this.claimlock}/> */}
-              <input type="submit" value="ClaimLock"/>
+              <input type="submit" value="Share Key" onClick={this.claimlock}/> */}
               </form>
           </div>
           <Demo2
@@ -169,13 +222,19 @@ Demo1.propTypes = {
   // adminLockIds: PropTypes.array,
   // userLockIds: PropTypes.array,
   textarea: PropTypes.string,
+  targetUsername: PropTypes.string,
+  targetRole: PropTypes.number,
   selectedOption: PropTypes.string,
   dispatch: PropTypes.func.isRequired
+  // selectedOption: PropTypes.string,
+  // selectedOption: PropTypes.string,
 };
 
 const mapStateToProps = state => {
   return {
     username: state.username.value,
+    targetUsername: state.targetUsername.value,
+    targetRole: state.targetRole.value,
     setUser,
     // adminLockIds: state.adminLockIds.value,
     // userLockIds: state.userLockIds.value,

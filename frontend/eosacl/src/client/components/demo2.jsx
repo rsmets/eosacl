@@ -55,14 +55,15 @@ class Demo2 extends Component {
     // const { setUser, username } = this.props;
     const { dispatch } = this.props;
     const { username } = this.props;
-    debugger;
+    // debugger;
     // Send request the blockchain by calling the ApiService,
     // Get the user object and store the `win_count`, `lost_count` and `game_data` object
     return ApiService.getUserByName(username).then(user => {
-      debugger;
+      // debugger;
       // dispatch(inputName(user.username));
       // dispatch(adminLockIds(user.lock_ids));
       // dispatch(userLockIds(user.access_only_lock_ids));
+      // debugger;
       dispatch(setUser({
         lock_ids: user.lock_ids,
         access_only_lock_ids: user.access_only_lock_ids,
@@ -74,13 +75,13 @@ class Demo2 extends Component {
   render() {
     const {adminLockIds, userLockIds, user} = this.props;
     // const {user: {lock_ids, access_only_lock_ids}} = this.props;
-    debugger;
+    // debugger;
     return (
       <div styleName="custom.container">
         <Nav {...this.props} />
         <section styleName="custom.header">
           <h2>{this.props.username}</h2>
-          <ul>
+          <ul> 
             {/* adminLockIds: {this.props.adminLockIds}
             userLockIds: {this.props.userLockIds} */}
             adminLockIds: {user && user.lock_ids ? 
