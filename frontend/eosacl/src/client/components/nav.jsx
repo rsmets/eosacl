@@ -13,14 +13,14 @@ export class Nav extends Component {
     const currentTab = this.props.location.pathname.replace("/", "");
     return (
       <ul styleName="styles.bar">
-        {navs.map((x, i) => {
+        {/* {navs.map((x, i) => {
           const s = `styles.base${currentTab === x[1] ? " styles.active" : ""}`;
           return (
             <li key={i} styleName={s}>
               <Link to={`/${x[1]}`}>{x[0]}</Link>
             </li>
           );
-        })}
+        })} */}
       </ul>
     );
   }

@@ -78,7 +78,7 @@ class Demo2 extends Component {
     // debugger;
     return (
       <div styleName="custom.container">
-        <Nav {...this.props} />
+        {/* <Nav {...this.props} /> */}
         <section styleName="custom.header">
           <h2>{this.props.username}</h2>
           <ul> 

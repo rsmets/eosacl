@@ -51,7 +51,7 @@ class Home extends React.Component {
     // const {username, authenticated} = this.state;
     return (
       <div styleName="custom.container">
-        <Nav {...this.props} />
+        {/* <Nav {...this.props} /> */}
 
         {/**/}
         {authenticated && username ? <Demo1/> : <Login/>}
