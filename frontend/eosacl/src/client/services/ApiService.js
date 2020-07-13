@@ -1,4 +1,7 @@
-import { Api, JsonRpc } from 'eosjs';
+import { Api, JsonRpc } from 'eosjs2';
+const eosjs2 = require('eosjs2');
+// const fetch = require('node-fetch'); 
+
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 // import { eosjs_api } from 'eosjs/dist/eosjs-api';
 // import { eosjs_jsonrpc } from 'eosjs/dist/eosjs_jssig';
@@ -47,7 +50,9 @@ async function takeAction(action, dataValue, account) {
   // const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
   // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
   const rpc = new JsonRpc(ENDPOINT, {});
+  // const rpc = new eosjs2.Rpc.JsonRpc(ENDPOINT, { fetch });
   const signatureProvider = new JsSignatureProvider([privateKey]);
+  // const signatureProvider = new eosjs2.SignatureProvider([privateKey]);
   debugger;
   
 
@@ -98,7 +103,8 @@ async function takeScatterAction(action, dataValue, account) {
   };
   
   const network = ScatterJS.Network.fromJson(networkJson);
-  const rpc = new JsonRpc(ENDPOINT);
+  // const rpc = new JsonRpc(ENDPOINT);
+  const rpc = new eosjs2.Rpc.JsonRpc(ENDPOINT, { fetch });
   const api = ScatterJS.eos(network, Api, {rpc})
 
   debugger;
@@ -234,11 +240,12 @@ class ApiService {
     debugger;
       // return takeAction("claimlock", {user: localStorage.getItem('cardgame_account')});
       // return takeAction("claimlock", {owner, lock_id});
-      // return takeScatterAction("claimlock", {owner, lock_id}, account);
-      const es = new EosService(CONTRACT_NAME, CONTRACT_NAME)
-      return es.connect().then (c => {
-        return es.transaction("claimlock", {owner, lock_id}, account);
-      })
+      return takeScatterAction("claimlock", {owner, lock_id}, account);
+      // const es = new EosService(CONTRACT_NAME, CONTRACT_NAME)
+      // return es.connect().then (c => {
+      //   return es.transaction("claimlock", {owner, lock_id}, account);
+      // })
+
       // return this.eosService.transact("claimlock", {owner, lock_id}, account);
   }
 
