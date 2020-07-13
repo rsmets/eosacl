@@ -38,35 +38,36 @@ class Demo1 extends Component {
     this.claimlock = this.claimlock.bind(this);
     this.sharekey = this.sharekey.bind(this);
     // this.test = this.test.bind(this);
+    this.getHistory = this.getHistory.bind(this);
     this.logout = this.logout.bind(this);
-  //   this.loadUser = this.loadUser.bind(this);
+    this.loadUser = this.loadUser.bind(this);
   //   // Call `loadUser` before mounting the app
-  //   this.loadUser();
+    this.loadUser();
   // }
 
-  // // Get latest user object from blockchain
-  // loadUser() {
-  //   // Extract `setUser` of `UserAction` and `user.name` of UserReducer from redux
-  //   // const { setUser, username } = this.props;
-  //   const { dispatch } = this.props;
-  //   const { username } = this.props;
-  //   debugger;
-  //   // Send request the blockchain by calling the ApiService,
-  //   // Get the user object and store the `win_count`, `lost_count` and `game_data` object
-  //   return ApiService.getUserByName(username).then(user => {
-  //     debugger;
-  //     dispatch(inputName(user.username));
-  //     dispatch(adminLockIds(user.lock_ids));
-  //     dispatch(userLockIds(user.access_only_lock_ids));
-  //     // setUser({
-  //     //   lock_ids: user.lock_ids,
-  //     //   access_only_lock_ids: user.access_only_lock_ids,
-  //     //   win_count: user.win_count,
-  //     //   lost_count: user.lost_count,
-  //     //   game: user.game_data,
-  //     // });
-  //   });
   }
+
+    // Get latest user object from blockchain
+    loadUser() {
+      // Extract `setUser` of `UserAction` and `user.name` of UserReducer from redux
+      // const { setUser, username } = this.props;
+      const { dispatch } = this.props;
+      const { username } = this.props;
+      // debugger;
+      // Send request the blockchain by calling the ApiService,
+      // Get the user object and store the `win_count`, `lost_count` and `game_data` object
+      return ApiService.getUserByName(username).then(user => {
+        // debugger;
+        // dispatch(inputName(user.username));
+        // dispatch(adminLockIds(user.lock_ids));
+        // dispatch(userLockIds(user.access_only_lock_ids));
+        // debugger;
+        dispatch(setUser({
+          lock_ids: user.lock_ids,
+          access_only_lock_ids: user.access_only_lock_ids,
+        }));
+      });
+    }
 
   handleSubmit(event) {
     // alert (this.state.textarea)
@@ -96,6 +97,25 @@ class Demo1 extends Component {
   //   })
   // }
 
+  getHistory() {
+    // alert("hi");
+    event.preventDefault();
+    const {username, targetUsername, targetRole, textarea, eosAccount} = this.props;
+    const lockId = textarea;
+    
+    debugger;
+    // ApiService.sharekey('bob', 'alice', 2, 20).then(() => {
+    ApiService.getHistory(username, eosAccount).then((result) => {
+      debugger;
+      console.log('done!')
+    }).catch(error => {
+      debugger;
+      const errorMessage = `Error: ${error.message}`
+      console.log(`error ${errorMessage}`);
+      alert(errorMessage)
+    });
+  }
+
   sharekey() {
     // alert("hi");
     event.preventDefault();
@@ -107,6 +127,7 @@ class Demo1 extends Component {
     ApiService.sharekey(username, targetUsername, lockId, targetRole, eosAccount).then((result) => {
       debugger;
       console.log('done!')
+      this.loadUser();
     }).catch(error => {
       debugger;
       const errorMessage = `Error: ${error.message}`
@@ -127,6 +148,7 @@ class Demo1 extends Component {
     ApiService.claimlock(username, lockId, eosAccount).then((result) => {
       debugger;
       console.log('done!')
+      this.loadUser();
     }).catch(error => {
       debugger;
       const errorMessage = `Error: ${error.message}`
@@ -220,6 +242,7 @@ render() {
               <input type="submit" value="Share Key" onClick={this.sharekey}/>
               {/* <input type="submit" value="Send"/> */}
               <input type="submit" value="Claim Lock" onClick={this.claimlock}/>
+              <input type="submit" value="Get User Access History" onClick={this.getHistory}/>
               <input type="submit" value="Log Out" onClick={this.logout}/>
             {/* </fieldset> */}
               {/* <input

@@ -304,6 +304,17 @@ static revokekey(sender, targetUser, lock_id, account) {
     }
   }
 
+  static getHistory(username) {
+    debugger
+    return api.getHistory(username).then(res => {
+      console.log(res)
+      debugger
+    }).catch(e => {
+      debugger
+      console.error(`error: ${e}`)
+    })
+  }
+
 }
 
 export default ApiService;

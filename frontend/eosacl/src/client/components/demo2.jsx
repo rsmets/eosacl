@@ -76,7 +76,7 @@ class Demo2 extends Component {
     const {adminLockIds, userLockIds, user} = this.props;
     // const {user: {lock_ids, access_only_lock_ids}} = this.props;
     // debugger;
-    this.loadUser();
+    // this.loadUser();
     return (
       <div styleName="custom.container">
         {/* <Nav {...this.props} /> */}
