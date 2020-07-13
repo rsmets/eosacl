@@ -32,11 +32,12 @@ class Demo1 extends Component {
       lockId: { value: "" },
       targetUsername: { value: ""},
       targetRole: { value: 10},
+      eosAccount: {value: {}},
     };
 
     this.claimlock = this.claimlock.bind(this);
     this.sharekey = this.sharekey.bind(this);
-    this.test = this.test.bind(this);
+    // this.test = this.test.bind(this);
     this.logout = this.logout.bind(this);
   //   this.loadUser = this.loadUser.bind(this);
   //   // Call `loadUser` before mounting the app
@@ -75,35 +76,35 @@ class Demo1 extends Component {
     this.claimlock();
   }
 
-  test() {
-    // const body = {
-    //   requestingUser,
-    //   groupId,
-    //   targetLockIds: lockIdsToRemove,
-    // }
+  // test() {
+  //   // const body = {
+  //   //   requestingUser,
+  //   //   groupId,
+  //   //   targetLockIds: lockIdsToRemove,
+  //   // }
   
-    // const httpsAgent = new https.Agent({ rejectUnauthorized: process.env.NODE_ENV != 'local' , servername: '*.nexkey.com'});
-    // send request to external UserGroup Service
-    // return axios.post('localhost:1337' + "/rest/func", JSON.stringify(body), {
-    return axios.get('https://google.com')
-    .then(async (response) => {
-      if(response && response.status == 200) {
-        console.log(`goog yes`)
-      }
-    }).catch(e => {
-      console.log(e);
-    })
-  }
+  //   // const httpsAgent = new https.Agent({ rejectUnauthorized: process.env.NODE_ENV != 'local' , servername: '*.nexkey.com'});
+  //   // send request to external UserGroup Service
+  //   // return axios.post('localhost:1337' + "/rest/func", JSON.stringify(body), {
+  //   return axios.get('https://google.com')
+  //   .then(async (response) => {
+  //     if(response && response.status == 200) {
+  //       console.log(`goog yes`)
+  //     }
+  //   }).catch(e => {
+  //     console.log(e);
+  //   })
+  // }
 
   sharekey() {
     // alert("hi");
     event.preventDefault();
-    const {username, targetUsername, targetRole, textarea} = this.props;
+    const {username, targetUsername, targetRole, textarea, eosAccount} = this.props;
     const lockId = textarea;
     
     debugger;
     // ApiService.sharekey('bob', 'alice', 2, 20).then(() => {
-    ApiService.sharekey(username, targetUsername, lockId, targetRole).then((result) => {
+    ApiService.sharekey(username, targetUsername, lockId, targetRole, eosAccount).then((result) => {
       debugger;
       console.log('done!')
     }).catch(error => {
@@ -118,10 +119,12 @@ class Demo1 extends Component {
     // alert("hi");
     // debugger;
     event.preventDefault();
-    this.test().then(e => {console.log('asld;j')})
+    const {username, eosAccount} = this.props;
+
+    // this.test().then(e => {console.log('asld;j')})
     const lockId = parseInt(this.props.textarea);
     // const lockId = parseInt(this.state.textarea);
-    ApiService.claimlock('bob', lockId).then((result) => {
+    ApiService.claimlock(username, lockId, eosAccount).then((result) => {
       debugger;
       console.log('done!')
     }).catch(error => {
@@ -252,6 +255,7 @@ Demo1.propTypes = {
   // userLockIds: PropTypes.array,
   textarea: PropTypes.string,
   targetUsername: PropTypes.string,
+  eosAccount: PropTypes.object,
   targetRole: PropTypes.number,
   selectedOption: PropTypes.string,
   dispatch: PropTypes.func.isRequired
@@ -264,6 +268,7 @@ const mapStateToProps = state => {
     username: state.username.value,
     targetUsername: state.targetUsername.value,
     targetRole: state.targetRole.value,
+    eosAccount: state.eosAccount.value,
     setUser,
     // adminLockIds: state.adminLockIds.value,
     // userLockIds: state.userLockIds.value,

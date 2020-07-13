@@ -165,6 +165,17 @@ const authenticated = (store, action) => {
   return store || { value: false };
 };
 
+const eosAccount = (store, action) => {
+  if (action.type === "EOS_ACCOUNT") {
+    debugger;
+    return {
+      value: action.value
+    };
+  }
+
+  return store || { value: {} };
+};
+
 export default combineReducers({
   checkBox,
   number,
@@ -180,4 +191,5 @@ export default combineReducers({
   targetUsername,
   targetRole,
   authenticated,
+  eosAccount,
 });

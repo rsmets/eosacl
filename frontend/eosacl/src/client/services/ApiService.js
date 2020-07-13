@@ -1,26 +1,54 @@
 import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
-// import ScatterJS from 'scatterjs-core';
-// import ScatterEOS from 'scatterjs-plugin-eosjs';
+// import { eosjs_api } from 'eosjs/dist/eosjs-api';
+// import { eosjs_jsonrpc } from 'eosjs/dist/eosjs_jssig';
+import ScatterJS from 'scatterjs-core';
+// import ScatterEOS1  from 'scatterjs-plugin-eosjs';
+import ScatterEOS from 'scatterjs-plugin-eosjs2';
+// import 'core-js/es6/symbol'; 
+// require ('core-js/fn/symbol/iterator');
+
+import EosService from './EosService'
+import 'babel-polyfill';
+
+ScatterJS.plugins( new ScatterEOS() );
 
 const { TextEncoder, TextDecoder } = require('text-encoding');
 
+
+    window.ScatterJS = null; 
+
+
 const ENDPOINT = "http://localhost:8888"
 const CONTRACT_NAME = 'eosacl'
-// const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
-// // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
-// const rpc = new JsonRpc("http://localhost:8888", {});
-// const signatureProvider = new JsSignatureProvider([privateKey]);
+const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
+
+// const networkJson = {
+//   blockchain:'eos',
+//   host:'localhost',
+//   port:8888,
+//   protocol:'http',
+//   chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+// };
+
+// const network = ScatterJS.Network.fromJson(networkJson);
+// const rpc = new JsonRpc(ENDPOINT);
+
+// const rpc = new JsonRpc(ENDPOINT, {});
+
+const signatureProvider = new JsSignatureProvider([privateKey]);
 // debugger;
 // const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 
+// const api = ScatterJS.eos(network, Api, {rpc})
+
 // Main action call to blockchain
-async function takeAction(action, dataValue) {
-  const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
+async function takeAction(action, dataValue, account) {
+  // const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
   // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
   const rpc = new JsonRpc(ENDPOINT, {});
   const signatureProvider = new JsSignatureProvider([privateKey]);
-  // debugger;
+  debugger;
   
 
   // Main call to blockchain after setting action, account_name and data
@@ -28,7 +56,7 @@ async function takeAction(action, dataValue) {
     console.log(1)
     const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
     console.log(2)
-    // debugger;
+    debugger;
     const resultWithConfig = await api.transact({
       actions: [{
         // account: process.env.REACT_APP_EOS_CONTRACT_NAME,
@@ -57,62 +85,176 @@ async function takeAction(action, dataValue) {
   }
 }
 
-class ApiService {
+// const rpc = new eosjs_jsonrpc.default(network.fullhost());
+// const api = () => ScatterJS.eos(network, eosjs_api.default, {rpc})
 
-  static getCurrentUser() {
-    return new Promise((resolve, reject) => {
-      if (!localStorage.getItem("cardgame_account")) {
-        return reject();
-      }
-      takeAction("login", { username: localStorage.getItem("cardgame_account") })
-        .then(() => {
-          resolve(localStorage.getItem("cardgame_account"));
-        })
-        .catch(err => {
-          localStorage.removeItem("cardgame_account");
-          localStorage.removeItem("cardgame_key");
-          reject(err);
-        });
-    });
-  }
+async function takeScatterAction(action, dataValue, account) {
+  const networkJson = {
+    blockchain:'eos',
+    host:'localhost',
+    port:8888,
+    protocol:'http',
+    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+  };
+  
+  const network = ScatterJS.Network.fromJson(networkJson);
+  const rpc = new JsonRpc(ENDPOINT);
+  const api = ScatterJS.eos(network, Api, {rpc})
 
-  static login({ username, key }) {
-    return new Promise((resolve, reject) => {
-      localStorage.setItem("cardgame_account", username);
-      localStorage.setItem("cardgame_key", key);
-    //   takeAction("login", { user: username, message: key })
-    // console.log(`key ${key}`)
-    // console.log(`username ${username}`)
-      takeAction("login", { user: username })
-        .then(() => {
-          resolve();
-        })
-        .catch(err => {
-          localStorage.removeItem("cardgame_account");
-          localStorage.removeItem("cardgame_key");
-          reject(err);
-        });
-    });
-  }
-
-  static claimlock(owner, lock_id) {
+  debugger;
+  const id = await ScatterJS.login();
+    if (!id) {
+      alert(`not logged in`)
+    }
     // debugger;
-      // return takeAction("claimlock", {user: localStorage.getItem('cardgame_account')});
-      return takeAction("claimlock", {owner, lock_id});
-  }
 
-  static sharekey(sender, recipient, lock_id, role) {
-    // return takeAction("sharekey", {user: localStorage.getItem('cardgame_account'), player_card_index: cardHandIndex});
-    // debugger;
-    return takeAction("sharekey", {sender, recipient, lock_id, role});
+  //   try {
+  //   const transaction = await api.transact({
+  //     actions: [{
+  //       // account: 'eosacl', // name of contract,
+  //       account: CONTRACT_NAME,
+  //       name: action,
+  //       authorization: [{
+  //         actor: account.name,
+  //         permission: account.authority
+  //       }],
+  //       data: dataValue
+  //     }]
+  //   }
+  //   , {
+  //     blocksBehind: 3,
+  //     expireSeconds: 30,
+  //   }
+  //   )
+
+  //   debugger;
+  //   console.log(`sent txt :${transaction}`)
+  //   return transaction
+  // }catch(err) {
+  //   debugger;
+  //   console.error(`error: ${err}`)
+  // }
+
+  const resultWithConfig = await api.transact(
+    {
+      actions: [
+        {
+          account: CONTRACT_NAME,
+          name: action,
+          authorization: [
+            {
+              actor: account.name,
+              permission: account.authority
+            }
+          ],
+          data: dataValue
+        }
+      ]
+    },
+    {
+      blocksBehind: 3,
+      expireSeconds: 30
+    }
+  );
+  console.log(resultWithConfig);
+  return true;
+
+  // try {
+  //   console.log(1)
+  //   // const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+  //   console.log(2)
+  //   // debugger;
+  //   const resultWithConfig = await api.transact({
+  //     actions: [{
+  //       // account: process.env.REACT_APP_EOS_CONTRACT_NAME,
+  //       account: CONTRACT_NAME,
+  //       name: action,
+  //       authorization: [{
+  //         // actor: localStorage.getItem("cardgame_account"),
+  //         actor: account.name,
+  //         permission: account.authority
+  //       }],
+  //       data: dataValue,
+  //     }]
+  //   }
+  //   , {
+  //     blocksBehind: 3,
+  //     expireSeconds: 30,
+  //   }
+  //   );
+  //   // debugger;
+  //   console.log(3)
+  //   return resultWithConfig;
+  // } catch (err) {
+  //   debugger;
+  //   console.log(4)
+  //   throw(err)
+  // }
+
+
+  // return ScatterJS.login().then(id => {
+  //   if (!id) {
+  //     alert(`not logged in`)
+  //   }
+  //   debugger;
+
+  //   return api.transact({
+  //     actions: [{
+  //       // account: 'eosacl', // name of contract,
+  //       account: CONTRACT_NAME,
+  //       name: action,
+  //       authorization: [{
+  //         actor: account.name,
+  //         permission: account.authority
+  //       }],
+  //       data: dataValue
+  //     }]
+  //   }
+  //   , {
+  //     blocksBehind: 3,
+  //     expireSeconds: 30,
+  //   }
+  //   )
+  // }).then(res => {
+  //   console.log(`sent txt :${res}`)
+  // }).catch(err => {
+  //   console.error(`error: ${err}`)
+  // })
 }
 
-static revokekey() {
-    return takeAction("revokekey", { user: localStorage.getItem("cardgame_account") });
+class ApiService {
+  constructor() {
+    const eosService = new EosService(CONTRACT_NAME, CONTRACT_NAME)
+    // const con = this.eosService.connect();
+    // if (!con) alert('not connected')
+  }
+
+  static claimlock(owner, lock_id, account) {
+  // claimlock = async (owner, lock_id, account) => {
+    debugger;
+      // return takeAction("claimlock", {user: localStorage.getItem('cardgame_account')});
+      // return takeAction("claimlock", {owner, lock_id});
+      // return takeScatterAction("claimlock", {owner, lock_id}, account);
+      const es = new EosService(CONTRACT_NAME, CONTRACT_NAME)
+      return es.connect().then (c => {
+        return es.transaction("claimlock", {owner, lock_id}, account);
+      })
+      // return this.eosService.transact("claimlock", {owner, lock_id}, account);
+  }
+
+  static sharekey(sender, recipient, lock_id, role, account) {
+    // return takeAction("sharekey", {user: localStorage.getItem('cardgame_account'), player_card_index: cardHandIndex});
+    // debugger;
+    // return takeAction("sharekey", {sender, recipient, lock_id, role}, account);
+    return takeScatterAction("sharekey", {sender, recipient, lock_id, role}, account);
+}
+
+static revokekey(sender, targetUser, lock_id, account) {
+    return takeAction("revokekey", {sender, targetUser, lock_id}, account);
  }
   
- static checkaccess() {
-    return takeAction("checkaccess", { username: localStorage.getItem("cardgame_account") });
+ static checkaccess(user, lock_id, account) {
+    return takeAction("checkaccess", {user, lock_id}, account);
  }
 
   static async getUserByName(username) {

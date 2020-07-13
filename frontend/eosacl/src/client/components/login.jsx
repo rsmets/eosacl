@@ -2,14 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Nav } from "./nav";
-import { inputName, inputTextarea, selectOption, passwordName, setUser, updateAuthenticated } from "../actions";
+import { inputName, inputTextarea, selectOption, passwordName, setUser, updateAuthenticated, updateEosAccount } from "../actions";
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import demoStyle from "../styles/demo1.css"; // eslint-disable-line no-unused-vars
 import ApiService from '../services/ApiService';
 // import ScatterService from '../services/Scatter';
 
 import ScatterJS from 'scatterjs-core';
-// import ScatterEOS from 'scatterjs-plugin-eosjs';
+import ScatterEOS from 'scatterjs-plugin-eosjs2';
+
+ScatterJS.plugins(new ScatterEOS())
 
 const networkJson = {
   blockchain:'eos',
@@ -68,6 +70,7 @@ class Login extends Component {
 
     this.state = {
       username: { value: "" },
+      eosAccount: { value: {} },
       authenticated: { value: false },
       passwordVal: { value: "" },
       textarea: { value: "" },
@@ -129,6 +132,8 @@ class Login extends Component {
             // dispatch(inputName(ScatterJS.identity.name));
             debugger;
             dispatch(inputName(ScatterJS.identity.accounts[0].name));
+            const eosScatterAccount = ScatterJS.account('eos');
+            dispatch(updateEosAccount(eosScatterAccount));
         })
 
      })
@@ -195,6 +200,7 @@ class Login extends Component {
 Login.propTypes = {
   username: PropTypes.string,
   authenticated: PropTypes.bool,
+  eosAccount: PropTypes.object,
   textarea: PropTypes.string,
   selectedOption: PropTypes.string,
   dispatch: PropTypes.func.isRequired
@@ -203,6 +209,7 @@ Login.propTypes = {
 const mapStateToProps = state => {
   return {
     username: state.username.value,
+    eosAccount: state.eosAccount.value,
     authenticated: state.authenticated.value,
     textarea: state.textarea.value,
     selectedOption: state.selectedOption.value

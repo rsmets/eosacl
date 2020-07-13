@@ -13,7 +13,7 @@ ScatterJS.plugins( new ScatterEOS() );
 //     // TODO store in state because this has overhead.
 //     // -----------------------
 
-//     window.ScatterJS = null;
+//     window.ScatterJS = null; 
 //     // -----------------------
 //     // ALWAYS DO THIS
 //     // -----------------------

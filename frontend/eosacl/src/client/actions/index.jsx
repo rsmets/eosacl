@@ -92,3 +92,10 @@ export const updateAuthenticated = value => {
     value
   };
 };
+
+export const updateEosAccount = value => {
+  return {
+    type: "EOS_ACCOUNT",
+    value
+  };
+};
