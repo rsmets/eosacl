@@ -54,18 +54,17 @@ class Home extends React.Component {
         <Nav {...this.props} />
 
         {/**/}
+        {authenticated && username ? <Demo1/> : <Login/>}
 
-        <section styleName="custom.header">
+        {/* <section styleName="custom.header">
           <h2>
             <span>Hello from </span>
             <a href="https://github.com/electrode-io">
-              {/* {1==2 ? "Electrode": 'eosacl-dapp'} */}
-              {/* {authenticated ? `${username} is authenticated` : <Login/>} */}
               {authenticated && username ? <Demo1/> : <Login/>}
               <img src={electrodePng} />
             </a>
           </h2>
-        </section>
+        </section> */}
 
     {/* <Login/> */}
     {/* {this.props.username ? <Login/> : <DemoStates/>} */}
