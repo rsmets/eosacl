@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Nav } from "./nav";
-import { inputName, inputTextarea, selectOption, passwordName, setUser } from "../actions";
+import { inputName, inputTextarea, selectOption, passwordName, setUser, updateAuthenticated } from "../actions";
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import demoStyle from "../styles/demo1.css"; // eslint-disable-line no-unused-vars
 import ApiService from '../services/ApiService';
@@ -45,6 +45,7 @@ class Login extends Component {
 
     this.state = {
       username: { value: "" },
+      authenticated: { value: false },
       passwordVal: { value: "" },
       textarea: { value: "" },
       selectedOption: { value: "0-13" }
@@ -102,7 +103,7 @@ class Login extends Component {
                 return false;
             }
 
-            // dispatch(authenticated(true));
+            dispatch(updateAuthenticated(true));
             // dispatch(inputName(ScatterJS.identity.name));
             debugger;
             dispatch(inputName(ScatterJS.identity.accounts[0].name));
@@ -112,7 +113,7 @@ class Login extends Component {
   }
 
   render() {
-    const { dispatch, username } = this.props;
+    const { dispatch, username, authenticated } = this.props;
     return (
       <div styleName="custom.container">
         <Nav {...this.props} />
@@ -120,6 +121,7 @@ class Login extends Component {
           <h2>Login</h2>
           {/* {username ? `${username} is currently logged in`: <label htmlFor="nameField">Name</label>} */}
           {/* {username ? `${username} is currently logged in`: <label></label>} */}
+          {authenticated ? `${username} is authenticated`: <label></label>}
           {/* <form onSubmit={this.loadUser}> */}
           <form>
             <fieldset>
@@ -130,6 +132,7 @@ class Login extends Component {
                 id="nameField"
                 value={this.props.username}
                 onChange={event => {
+                  dispatch(updateAuthenticated(false))
                   dispatch(inputName(event.target.value));
                 }}
               />
@@ -154,6 +157,7 @@ class Login extends Component {
 
 Login.propTypes = {
   username: PropTypes.string,
+  authenticated: PropTypes.bool,
   textarea: PropTypes.string,
   selectedOption: PropTypes.string,
   dispatch: PropTypes.func.isRequired
@@ -162,6 +166,7 @@ Login.propTypes = {
 const mapStateToProps = state => {
   return {
     username: state.username.value,
+    authenticated: state.authenticated.value,
     textarea: state.textarea.value,
     selectedOption: state.selectedOption.value
   };

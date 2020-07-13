@@ -85,3 +85,10 @@ export const updateTargetRole = value => {
     value
   };
 };
+
+export const updateAuthenticated = value => {
+  return {
+    type: "AUTHENTICATED",
+    value
+  };
+};

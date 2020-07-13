@@ -154,6 +154,17 @@ const targetRole = (store, action) => {
   return store || { value: 10 };
 };
 
+const authenticated = (store, action) => {
+  if (action.type === "AUTHENTICATED") {
+    // debugger;
+    return {
+      value: action.value
+    };
+  }
+
+  return store || { value: false };
+};
+
 export default combineReducers({
   checkBox,
   number,
@@ -168,4 +179,5 @@ export default combineReducers({
   user,
   targetUsername,
   targetRole,
+  authenticated,
 });

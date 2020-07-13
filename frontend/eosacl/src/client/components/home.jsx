@@ -23,6 +23,7 @@ import electrodePng from "../images/electrode.png";
 import DemoStates from "./demo-states";
 import DemoPureStates from "./demo-pure-states";
 import Login from "./login";
+import Demo1 from "./demo1";
 import { DemoButtons } from "./demo-buttons";
 import DemoDynamicImport from "./demo-dynamic-import";
 import { Nav } from "./nav";
@@ -40,11 +41,14 @@ class Home extends React.Component {
     super(props);
 
     this.state = {
-      username: {value: ""}
+      username: {value: ""},
+      authenticated: {value: false},
     }
   }
 
   render() {
+    const { dispatch, username, authenticated } = this.props;
+    // const {username, authenticated} = this.state;
     return (
       <div styleName="custom.container">
         <Nav {...this.props} />
@@ -56,13 +60,14 @@ class Home extends React.Component {
             <span>Hello from </span>
             <a href="https://github.com/electrode-io">
               {/* {1==2 ? "Electrode": 'eosacl-dapp'} */}
-              {this.props.username ? this.props.username : 'eosacl dapp'}
+              {/* {authenticated ? `${username} is authenticated` : <Login/>} */}
+              {authenticated && username ? <Demo1/> : <Login/>}
               <img src={electrodePng} />
             </a>
           </h2>
         </section>
 
-<Login/>
+    {/* <Login/> */}
     {/* {this.props.username ? <Login/> : <DemoStates/>} */}
 {/* 
         <div styleName="custom.docs-section">
@@ -76,11 +81,11 @@ class Home extends React.Component {
         {/**/}
 
         {/**/}
-        <div styleName="custom.docs-section">
+        {/* <div styleName="custom.docs-section">
           <h6 styleName="custom.docs-header">Demo Isomorphic UI Config</h6>
           <div>config.ui.demo: "{config.ui.demo}"</div>
         </div>
-        {/**/}
+
 
         <div styleName="custom.docs-section">
           <DemoButtons />
@@ -88,7 +93,7 @@ class Home extends React.Component {
 
         <div styleName="custom.docs-section">
           <DemoDynamicImport/>
-        </div> */}
+        </div>  */}
 
       </div>
     );
@@ -98,9 +103,12 @@ class Home extends React.Component {
 Home.propTypes = {username: PropTypes.string};
 
 // const mapStateToProps = state => state;
-const mapStateToProps = state => {
-  username: state.username.value
-};
+const mapStateToProps = state => ({
+  // return {
+    username: state.username.value,
+    authenticated: state.authenticated.value
+  // }
+});
 
 export default connect(
   mapStateToProps,
