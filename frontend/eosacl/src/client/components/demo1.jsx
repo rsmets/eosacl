@@ -2,13 +2,21 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Nav } from "./nav";
-import { inputName, inputTextarea, selectOption, passwordName, updateAdminLockIds, updateUserLockIds, setUser, updateTargetUsername, updateTargetRole } from "../actions";
+import { inputName, inputTextarea, selectOption, passwordName, updateAdminLockIds, updateUserLockIds, setUser, updateTargetUsername, updateTargetRole, updateAuthenticated } from "../actions";
 import custom from "../styles/custom.css"; // eslint-disable-line no-unused-vars
 import demoStyle from "../styles/demo1.css"; // eslint-disable-line no-unused-vars
 import ApiService from '../services/ApiService';
 import AccessSharing from './access-sharing';
 import axios from 'axios';
 import Demo2 from "./demo2"
+
+const networkJson = {
+  blockchain:'eos',
+  host:'localhost',
+  port:8888,
+  protocol:'http',
+  chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+};
 
 class Demo1 extends Component {
   constructor(props) {
@@ -29,6 +37,7 @@ class Demo1 extends Component {
     this.claimlock = this.claimlock.bind(this);
     this.sharekey = this.sharekey.bind(this);
     this.test = this.test.bind(this);
+    this.logout = this.logout.bind(this);
   //   this.loadUser = this.loadUser.bind(this);
   //   // Call `loadUser` before mounting the app
   //   this.loadUser();
@@ -123,6 +132,25 @@ class Demo1 extends Component {
     });
   }
 
+  logout(event) {
+    event.preventDefault();
+    // debugger;
+    // const account = ScatterService.scatterConnect();
+
+    const { dispatch, username } = this.props;
+    const network = ScatterJS.Network.fromJson(networkJson);
+    // return ScatterJS.scatter.connect("bob", {network}).then(connected => {
+    // return ScatterJS.scatter.connect(username, {network}).then(connected => {
+      return ScatterJS.logout().then(result => {
+        if (!result) {
+          alert(`issue logging out`)
+        }
+
+        dispatch(updateAuthenticated(false));
+        dispatch(inputName(''));
+      });
+  }
+
   // render() {
   //   // const { dispatch } = this.props;
   //   return (
@@ -189,6 +217,7 @@ render() {
               <input type="submit" value="Share Key" onClick={this.sharekey}/>
               {/* <input type="submit" value="Send"/> */}
               <input type="submit" value="Claim Lock" onClick={this.claimlock}/>
+              <input type="submit" value="Log Out" onClick={this.logout}/>
             {/* </fieldset> */}
               {/* <input
                   type="text"
