@@ -1,5 +1,8 @@
 import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
+// import ScatterJS from 'scatterjs-core';
+// import ScatterEOS from 'scatterjs-plugin-eosjs';
+
 const { TextEncoder, TextDecoder } = require('text-encoding');
 
 const ENDPOINT = "http://localhost:8888"

@@ -39,6 +39,29 @@ const networkJson = {
 //     return scatter;
 // });
 
+// const network = ScatterJS.Network.fromJson(networkJson);
+// ScatterJS.scatter.connect('eosacl', {network}).then(connected => {
+//   // User does not have Scatter Desktop, Mobile or Classic installed.
+//   debugger;
+//   if(!connected) {
+//       alert(`no scatter!`);
+//       return false;
+//   }
+//   return ScatterJS.login().then(id => {
+//       debugger;
+//       if (!id) {
+//           alert('no id!')
+//           return false;
+//       }
+
+//       dispatch(updateAuthenticated(true));
+//       // dispatch(inputName(ScatterJS.identity.name));
+//       debugger;
+//       dispatch(inputName(ScatterJS.identity.accounts[0].name));
+//   })
+
+// })
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -87,8 +110,7 @@ class Login extends Component {
 
     const { dispatch, username } = this.props;
     const network = ScatterJS.Network.fromJson(networkJson);
-    // return ScatterJS.scatter.connect("bob", {network}).then(connected => {
-    // return ScatterJS.scatter.connect(username, {network}).then(connected => {
+    
     return ScatterJS.scatter.connect('eosacl', {network}).then(connected => {
         // User does not have Scatter Desktop, Mobile or Classic installed.
         debugger;
@@ -110,6 +132,21 @@ class Login extends Component {
         })
 
      })
+
+
+    // return ScatterService.getScatter().login().then(id => {
+    //         debugger;
+    //         if (!id) {
+    //             alert('no id!')
+    //             return false;
+    //         }
+
+    //         dispatch(updateAuthenticated(true));
+    //         // dispatch(inputName(ScatterJS.identity.name));
+    //         debugger;
+    //         dispatch(inputName(ScatterJS.identity.accounts[0].name));
+    //     })
+
   }
 
   render() {
@@ -118,14 +155,14 @@ class Login extends Component {
       <div styleName="custom.container">
         <Nav {...this.props} />
         <div styleName="demoStyle.container">
-          <h2>Login</h2>
+          <h2>Authenticate With Scatter Wallet</h2>
           {/* {username ? `${username} is currently logged in`: <label htmlFor="nameField">Name</label>} */}
           {/* {username ? `${username} is currently logged in`: <label></label>} */}
           {authenticated ? `${username} is authenticated`: <label></label>}
           {/* <form onSubmit={this.loadUser}> */}
           <form>
             <fieldset>
-              <label htmlFor="nameField">Name</label>
+              {/* <label htmlFor="nameField">Name</label>
               <input
                 type="text"
                 placeholder="Electrode User"
@@ -144,7 +181,7 @@ class Login extends Component {
                 onChange={e => {
                   dispatch(passwordName(e.target.value));
                 }}
-              />
+              /> */}
               <input type="submit" value="Send" onClick={this.login}/>
               {/* <input type="submit" value="Send"/> */}
             </fieldset>
