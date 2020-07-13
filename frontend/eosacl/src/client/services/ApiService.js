@@ -26,6 +26,19 @@ const ENDPOINT = "http://localhost:8888"
 const CONTRACT_NAME = 'eosacl'
 const privateKey = "5JXwk5XaG4JaKH5xqkRTs73pZTLNwTzvC6pxRHPmFBuAyr7FMpe" //|| dataValue.key || localStorage.getItem("cardgame_key");
 
+const networkJson = {
+  blockchain:'eos',
+  host:'localhost',
+  port:8888,
+  protocol:'http',
+  chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+};
+
+const network = ScatterJS.Network.fromJson(networkJson);
+// const rpc = new JsonRpc(ENDPOINT);
+const rpc = new eosjs2.Rpc.JsonRpc(ENDPOINT, { fetch });
+const api = ScatterJS.eos(network, Api, {rpc})
+
 // const networkJson = {
 //   blockchain:'eos',
 //   host:'localhost',
@@ -94,18 +107,18 @@ async function takeAction(action, dataValue, account) {
 // const api = () => ScatterJS.eos(network, eosjs_api.default, {rpc})
 
 async function takeScatterAction(action, dataValue, account) {
-  const networkJson = {
-    blockchain:'eos',
-    host:'localhost',
-    port:8888,
-    protocol:'http',
-    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
-  };
+  // const networkJson = {
+  //   blockchain:'eos',
+  //   host:'localhost',
+  //   port:8888,
+  //   protocol:'http',
+  //   chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+  // };
   
-  const network = ScatterJS.Network.fromJson(networkJson);
-  // const rpc = new JsonRpc(ENDPOINT);
-  const rpc = new eosjs2.Rpc.JsonRpc(ENDPOINT, { fetch });
-  const api = ScatterJS.eos(network, Api, {rpc})
+  // const network = ScatterJS.Network.fromJson(networkJson);
+  // // const rpc = new JsonRpc(ENDPOINT);
+  // const rpc = new eosjs2.Rpc.JsonRpc(ENDPOINT, { fetch });
+  // const api = ScatterJS.eos(network, Api, {rpc})
 
   debugger;
   const id = await ScatterJS.login();
@@ -269,7 +282,8 @@ static revokekey(sender, targetUser, lock_id, account) {
     console.log(1)
     try {
       // const rpc = new JsonRpc(process.env.REACT_APP_EOS_HTTP_ENDPOINT);
-      const rpc = new JsonRpc(ENDPOINT);
+      // const rpc = new JsonRpc(ENDPOINT);
+      // const rpc = new eosjs2.Rpc.JsonRpc(ENDPOINT, { fetch });
       const result = await rpc.get_table_rows({
         "json": true,
         // "code": process.env.REACT_APP_EOS_CONTRACT_NAME,    // contract who owns the table
