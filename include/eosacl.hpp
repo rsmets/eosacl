@@ -15,7 +15,7 @@ CONTRACT eosacl : public contract {
     ACTION claimlock(name owner, uint8_t lock_id);
     ACTION sharekey(name sender, name recipient, uint8_t lock_id, uint8_t role);
     ACTION revokekey(name admin, name target, uint8_t lock_id);
-    ACTION checkaccess(name username, uint8_t lock_id, uint8_t role);
+    ACTION logaccess(name username, uint8_t lock_id, uint8_t role);
 
   private:
 

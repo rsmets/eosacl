@@ -84,8 +84,9 @@ ACTION eosacl::revokekey(name admin, name target, uint8_t lock_id) {
 }
 
 // Maybe want to make this 'logaccess'? so makes more sense to gatekeep...? but then wouldn't really be right either. can log before checking permissions.
-ACTION eosacl::checkaccess(name username, uint8_t lock_id, uint8_t role) {
-  require_auth(get_self()); // could do this but then *only* this contract owner could use (restrict to me and my frontend) otherwise could be abused...
+ACTION eosacl::logaccess(name username, uint8_t lock_id, uint8_t role) {
+  // require_auth(get_self()); // could do this but then *only* this contract owner could use (restrict to me and my frontend)
+  require_auth(username); // the account logging access needs to have the authority to do so!
   _checkaccess(username, lock_id, role);
 }
 
@@ -257,4 +258,4 @@ void eosacl::eraseLock(lock& lock_detail, name& user) {
 }
 */
 
-EOSIO_DISPATCH(eosacl, (claimlock)(sharekey)(checkaccess)(revokekey))
+EOSIO_DISPATCH(eosacl, (claimlock)(sharekey)(logaccess)(revokekey))
