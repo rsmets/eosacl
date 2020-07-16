@@ -121,12 +121,13 @@ class Demo1 extends Component {
   sharekey() {
     // alert("hi");
     event.preventDefault();
-    const {username, targetUsername, targetRole, textarea, eosAccount} = this.props;
+    const {username, targetUsername, targetRole, textarea, eosAccount, selectedOption} = this.props;
     const lockId = textarea;
     
     debugger;
     // ApiService.sharekey('bob', 'alice', 2, 20).then(() => {
-    ApiService.sharekey(username, targetUsername, lockId, targetRole, eosAccount).then((result) => {
+    // ApiService.sharekey(username, targetUsername, lockId, targetRole, eosAccount).then((result) => {
+    ApiService.sharekey(username, targetUsername, lockId, selectedOption, eosAccount).then((result) => {
       debugger;
       console.log('done!')
       this.loadUser();
@@ -232,7 +233,7 @@ render() {
                 }}
               />
               <label htmlFor="roleField">Target Role</label>
-              <input
+              {/* <input
                 type="text"
                 placeholder="Role you would like to grant to target user"
                 id="targetRoleField"
@@ -240,11 +241,25 @@ render() {
                 onChange={e => {
                   dispatch(updateTargetRole(e.target.value));
                 }}
-              />
+              /> */}
+              <select
+                id="roleSelector"
+                onChange={event => {
+                  dispatch(selectOption(event.target.value));
+                  // dispatch(updateTargetRole(e.target.value));
+                }}
+                value={this.props.selectedOption}
+                // value={this.props.targetRole}
+              >
+                <option value="10">User</option>
+                <option value="20">Admin</option>
+              </select>
+
               <input type="submit" value="Share Key" onClick={this.sharekey}/>
               {/* <input type="submit" value="Send"/> */}
               <input type="submit" value="Claim Lock" onClick={this.claimlock}/>
               <input type="submit" value="Log Out" onClick={this.logout}/>
+
               {/* <input type="submit" value="Get User Access History" onClick={this.getHistory}/> */}
               {/* <Link to={`https://eosauthority.com/account/${this.props.targetUsername}?network=eos`}>
               <button type="button" className="btn btn-info">Get User Access History</button>
