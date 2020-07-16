@@ -83,16 +83,27 @@ ACTION eosacl::revokekey(name admin, name target, uint8_t lock_id) {
   });
 }
 
-// Maybe want to make this 'logaccess'? so makes more sense to gatekeep...? but then wouldn't really be right either. can log before checking permissions.
 ACTION eosacl::logaccess(name username, uint8_t lock_id, uint8_t role) {
-  // require_auth(get_self()); // could do this but then *only* this contract owner could use (restrict to me and my frontend)
   require_auth(username); // the account logging access needs to have the authority to do so!
   _checkaccess(username, lock_id, role);
 }
 
-void eosacl::_checkaccess(name username, uint8_t lock_id, uint8_t role) {
-  print ("Checking if ", name{username}, " has ", uint8_t{role} ," access to lock ", uint8_t{lock_id}, ". \n");
+// Maybe want to make this 'logaccess'? so makes more sense to gatekeep...? but then wouldn't really be right either. can log before checking permissions.
+ACTION eosacl::checkaccess(name username, uint8_t lock_id, uint8_t role) {
+  // require_auth(get_self()); // could do this but then *only* this contract owner could use (restrict to me and my frontend)
+  // require_auth(username); // the account logging access needs to have the authority to do so!
+  _checkaccess(username, lock_id, role);
+}
 
+void eosacl::_checkaccess(name username, uint8_t lock_id, uint8_t role) {
+  check(role == USER || role == ADMIN, "role input invalid");
+  // print ("Checking if ", name{username}, " has ", uint8_t{role} ," access to lock ", uint8_t{lock_id}, ". \n");
+  if (role == ADMIN)
+    print ("Checking if ", name{username}, " has Admin access to lock ", uint8_t{lock_id}, ". \n");
+  else //(role == USER)
+    print ("Checking if ", name{username}, " has User access to lock ", uint8_t{lock_id}, ". \n");
+    
+  
   // get the lock from the _locks table
   auto& user = _users.get(username.value, "user is not had a key shared with, not in dapp yet.");
   // & ??  worked with the & before
@@ -108,6 +119,7 @@ void eosacl::_checkaccess(name username, uint8_t lock_id, uint8_t role) {
   // check(itr != user.lock_ids.end(), message);
     
   // // need to chekc the locks table as well?? shouldn't really but maybe should?
+  print (" Access verified.");
 }
 
 void eosacl::_checkAdminLevelAccess(user_info user, uint8_t lock_id) {
@@ -258,4 +270,4 @@ void eosacl::eraseLock(lock& lock_detail, name& user) {
 }
 */
 
-EOSIO_DISPATCH(eosacl, (claimlock)(sharekey)(logaccess)(revokekey))
+EOSIO_DISPATCH(eosacl, (claimlock)(sharekey)(logaccess)(checkaccess)(revokekey))

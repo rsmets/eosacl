@@ -87,7 +87,7 @@ const selectedOption = (store, action) => {
       value: action.value
     };
   }
-  return store || { value: "0-13" };
+  return store || { value: 10 };
 };
 
 const showFakeComp = (store, action) => {

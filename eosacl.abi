@@ -4,6 +4,24 @@
     "types": [],
     "structs": [
         {
+            "name": "checkaccess",
+            "base": "",
+            "fields": [
+                {
+                    "name": "username",
+                    "type": "name"
+                },
+                {
+                    "name": "lock_id",
+                    "type": "uint8"
+                },
+                {
+                    "name": "role",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
             "name": "claimlock",
             "base": "",
             "fields": [
@@ -127,6 +145,11 @@
         }
     ],
     "actions": [
+        {
+            "name": "checkaccess",
+            "type": "checkaccess",
+            "ricardian_contract": ""
+        },
         {
             "name": "claimlock",
             "type": "claimlock",

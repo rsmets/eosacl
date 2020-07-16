@@ -273,9 +273,16 @@ static revokekey(sender, targetUser, lock_id, account) {
     return takeAction("revokekey", {sender, targetUser, lock_id}, account);
  }
   
- static checkaccess(user, lock_id, account) {
-    return takeAction("checkaccess", {user, lock_id}, account);
+ static logaccess(username, lock_id, role, account) {
+    // return takeAction("logaccess", {user, lock_id}, account);
+    debugger;
+    return takeScatterAction("logaccess", {username, lock_id, role}, account);
  }
+
+static checkaccess(username, lock_id, role, account) {
+  // return takeAction("logaccess", {user, lock_id}, account);
+  return takeScatterAction("checkaccess", {username, lock_id, role}, account);
+}
 
   static async getUserByName(username) {
     // debugger;

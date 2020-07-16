@@ -11,6 +11,9 @@ import axios from 'axios';
 import Demo2 from "./demo2"
 import ScatterJS from 'scatterjs-core';
 import {Link} from 'react-router-dom'
+// import { withToastManager, useToasts } from 'react-toast-notifications';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const networkJson = {
   blockchain:'eos',
@@ -30,7 +33,7 @@ class Demo1 extends Component {
       adminLockIds: { value: [] },
       userLockIds: { value: [] },
       textarea: { value: "" },
-      selectedOption: { value: "0-13" },
+      selectedOption: { value: 10 },
       lockId: { value: "" },
       targetUsername: { value: ""},
       targetRole: { value: 10},
@@ -43,6 +46,7 @@ class Demo1 extends Component {
     this.getHistory = this.getHistory.bind(this);
     this.logout = this.logout.bind(this);
     this.loadUser = this.loadUser.bind(this);
+    this.logaccess = this.logaccess.bind(this);
   //   // Call `loadUser` before mounting the app
     this.loadUser();
   // }
@@ -110,6 +114,48 @@ class Demo1 extends Component {
     ApiService.getHistory(username, eosAccount).then((result) => {
       debugger;
       console.log('done!')
+    }).catch(error => {
+      debugger;
+      const errorMessage = `Error: ${error.message}`
+      console.log(`error ${errorMessage}`);
+      alert(errorMessage)
+    });
+  }
+
+  logaccess() {
+    // alert("hi");
+    event.preventDefault();
+    const {username, targetUsername, targetRole, textarea, eosAccount, selectedOption} = this.props;
+    const lockId = textarea;
+    
+    debugger;
+    // ApiService.sharekey('bob', 'alice', 2, 20).then(() => {
+    // ApiService.sharekey(username, targetUsername, lockId, targetRole, eosAccount).then((result) => {
+    ApiService.logaccess(username, lockId, selectedOption, eosAccount).then((result) => {
+      debugger;
+      console.log('done!')
+
+      alert('Access Logged!')
+
+    // toast.success('🦄 Wow so easy!', {
+    //   position: "top-right",
+    //   autoClose: 5000,
+    //   hideProgressBar: false,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   draggable: true,
+    //   progress: undefined,
+    //   });
+
+    //   <ToastProvider
+    //   autoDismiss
+    //   autoDismissTimeout={6000}
+    //   components={{ Toast: Snack }}
+    //   placement="bottom-center"
+    // >
+    //   Access Logged!
+    // </ToastProvider>
+      this.loadUser();
     }).catch(error => {
       debugger;
       const errorMessage = `Error: ${error.message}`
@@ -202,6 +248,16 @@ render() {
               <input type="submit" value="ShareKey" onClick={this.sharekey}/>
             </form> */}
             <form>
+            <input type="submit" value="Log Out" onClick={this.logout}/>
+            <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // window.location.href=`https://eosauthority.com/account/${this.props.targetUsername}?network=eos`;
+                    window.location.href=`https://eosauthority.com/account/rayzorsharp1?network=eos`;
+                    }}
+              > Get User Access History</button>
+
             {/* <form onSubmit={this.claimlock}> */}
             <label htmlFor="lockIdField">Lock ID</label>
             <input
@@ -218,8 +274,9 @@ render() {
                     // this.setState({textarea: e.target.value})
                   }}
                 />
-              {/* <input type="submit" value="ClaimLock" onClick={this.claimlock}/> */}
-              {/* <input type="submit" value="ClaimLock"/> */}
+
+              <input type="submit" value="Log Access" onClick={this.logaccess}/>
+              <input type="submit" value="Claim Lock" onClick={this.claimlock}/>
 
               {/* <fieldset> */}
               <label htmlFor="nameField">Target User</label>
@@ -257,22 +314,13 @@ render() {
 
               <input type="submit" value="Share Key" onClick={this.sharekey}/>
               {/* <input type="submit" value="Send"/> */}
-              <input type="submit" value="Claim Lock" onClick={this.claimlock}/>
-              <input type="submit" value="Log Out" onClick={this.logout}/>
+
 
               {/* <input type="submit" value="Get User Access History" onClick={this.getHistory}/> */}
               {/* <Link to={`https://eosauthority.com/account/${this.props.targetUsername}?network=eos`}>
               <button type="button" className="btn btn-info">Get User Access History</button>
               </Link> */}
 
-              <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // window.location.href=`https://eosauthority.com/account/${this.props.targetUsername}?network=eos`;
-                    window.location.href=`https://eosauthority.com/account/rayzorsharp1?network=eos`;
-                    }}
-              > Get User Access History</button>
             {/* </fieldset> */}
               {/* <input
                   type="text"
