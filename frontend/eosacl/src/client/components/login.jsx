@@ -13,13 +13,23 @@ import ScatterEOS from 'scatterjs-plugin-eosjs2';
 
 ScatterJS.plugins(new ScatterEOS())
 
+// const networkJson = {
+//   blockchain:'eos',
+//   host:'localhost',
+//   port:8888,
+//   protocol:'http',
+//   chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+// };
+
 const networkJson = {
   blockchain:'eos',
-  host:'localhost',
-  port:8888,
-  protocol:'http',
-  chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+  // host:'api1.eosasia.one',
+  host:'nodes.get-scatter.com',
+  port:443,
+  protocol:'https',
+  chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 };
+const CONTRACT_NAME = 'myeosacldapp'
 
 // // Don't forget to tell ScatterJS which plugins you are using.
 // ScatterJS.plugins( new ScatterEOS() );
@@ -114,7 +124,8 @@ class Login extends Component {
     const { dispatch, username } = this.props;
     const network = ScatterJS.Network.fromJson(networkJson);
     
-    return ScatterJS.scatter.connect('eosacl', {network}).then(connected => {
+    return ScatterJS.scatter.connect(CONTRACT_NAME, {network}).then(connected => {
+    // return ScatterJS.scatter.connect('eosacl', {network}).then(connected => {
         // User does not have Scatter Desktop, Mobile or Classic installed.
         debugger;
         if(!connected) {
