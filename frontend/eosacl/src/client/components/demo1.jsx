@@ -48,6 +48,7 @@ class Demo1 extends Component {
     this.loadUser = this.loadUser.bind(this);
     this.logaccess = this.logaccess.bind(this);
     this.checkaccess = this.checkaccess.bind(this);
+    this.revokekey = this.revokekey.bind(this);
   //   // Call `loadUser` before mounting the app
     this.loadUser();
   // }
@@ -211,6 +212,28 @@ class Demo1 extends Component {
     });
   }
 
+  revokekey() {
+    // alert("hi");
+    event.preventDefault();
+    const {username, targetUsername, targetRole, textarea, eosAccount, selectedOption} = this.props;
+    const lockId = textarea;
+    
+    debugger;
+    // ApiService.sharekey('bob', 'alice', 2, 20).then(() => {
+    // ApiService.sharekey(username, targetUsername, lockId, targetRole, eosAccount).then((result) => {
+    ApiService.revokekey(username, targetUsername, lockId, eosAccount).then((result) => {
+      debugger;
+      alert(`Key successfully revoked from ${targetUsername}`);
+      console.log('done!')
+      this.loadUser();
+    }).catch(error => {
+      debugger;
+      const errorMessage = `Error: ${error.message}`
+      console.log(`error ${errorMessage}`);
+      alert(errorMessage)
+    });
+  }
+
   claimlock(event) {
     // alert("hi");
     // debugger;
@@ -342,6 +365,7 @@ render() {
               </select>
 
               <input type="submit" value="Share Key" onClick={this.sharekey}/>
+              <input type="submit" value="Revoke Key" onClick={this.revokekey}/>
               {/* <input type="submit" value="Send"/> */}
 
 

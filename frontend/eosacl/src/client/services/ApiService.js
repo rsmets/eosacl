@@ -269,8 +269,9 @@ class ApiService {
     return takeScatterAction("sharekey", {sender, recipient, lock_id, role}, account);
 }
 
-static revokekey(sender, targetUser, lock_id, account) {
-    return takeAction("revokekey", {sender, targetUser, lock_id}, account);
+static revokekey(admin, target, lock_id, account) {
+    // return takeAction("revokekey", {sender, targetUser, lock_id}, account);
+    return takeScatterAction("revokekey", {admin, target, lock_id}, account);
  }
   
  static logaccess(username, lock_id, role, account) {
