@@ -10,6 +10,7 @@ import AccessSharing from './access-sharing';
 import axios from 'axios';
 import Demo2 from "./demo2"
 import ScatterJS from 'scatterjs-core';
+import {Link} from 'react-router-dom'
 
 const networkJson = {
   blockchain:'eos',
@@ -243,8 +244,20 @@ render() {
               <input type="submit" value="Share Key" onClick={this.sharekey}/>
               {/* <input type="submit" value="Send"/> */}
               <input type="submit" value="Claim Lock" onClick={this.claimlock}/>
-              <input type="submit" value="Get User Access History" onClick={this.getHistory}/>
               <input type="submit" value="Log Out" onClick={this.logout}/>
+              {/* <input type="submit" value="Get User Access History" onClick={this.getHistory}/> */}
+              {/* <Link to={`https://eosauthority.com/account/${this.props.targetUsername}?network=eos`}>
+              <button type="button" className="btn btn-info">Get User Access History</button>
+              </Link> */}
+
+              <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // window.location.href=`https://eosauthority.com/account/${this.props.targetUsername}?network=eos`;
+                    window.location.href=`https://eosauthority.com/account/rayzorsharp1?network=eos`;
+                    }}
+              > Get User Access History</button>
             {/* </fieldset> */}
               {/* <input
                   type="text"
