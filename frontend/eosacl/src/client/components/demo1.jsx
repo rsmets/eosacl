@@ -9,6 +9,7 @@ import ApiService from '../services/ApiService';
 import AccessSharing from './access-sharing';
 import axios from 'axios';
 import Demo2 from "./demo2"
+import ScatterJS from 'scatterjs-core';
 
 const networkJson = {
   blockchain:'eos',
