@@ -47,6 +47,7 @@ class Demo1 extends Component {
     this.logout = this.logout.bind(this);
     this.loadUser = this.loadUser.bind(this);
     this.logaccess = this.logaccess.bind(this);
+    this.checkaccess = this.checkaccess.bind(this);
   //   // Call `loadUser` before mounting the app
     this.loadUser();
   // }
@@ -158,6 +159,31 @@ class Demo1 extends Component {
       this.loadUser();
     }).catch(error => {
       debugger;
+      const errorMessage = `Error: ${error.message}`
+      console.log(`error ${errorMessage}`);
+      alert(errorMessage)
+    });
+  }
+
+  checkaccess() {
+    // alert("hi");
+    event.preventDefault();
+    const {username, targetUsername, targetRole, textarea, eosAccount, selectedOption} = this.props;
+    const lockId = textarea;
+    
+    debugger;
+    // ApiService.sharekey('bob', 'alice', 2, 20).then(() => {
+    // ApiService.sharekey(username, targetUsername, lockId, targetRole, eosAccount).then((result) => {
+    ApiService.checkaccess(targetUsername, lockId, selectedOption, eosAccount).then((result) => {
+      debugger;
+      console.log('done!')
+
+      alert('Has Access')
+
+      this.loadUser();
+    }).catch(error => {
+      debugger;
+      // alert('Does not have access')
       const errorMessage = `Error: ${error.message}`
       console.log(`error ${errorMessage}`);
       alert(errorMessage)
@@ -289,6 +315,9 @@ render() {
                   dispatch(updateTargetUsername(event.target.value));
                 }}
               />
+
+              <input type="submit" value="Check Access" onClick={this.checkaccess}/>
+
               <label htmlFor="roleField">Target Role</label>
               {/* <input
                 type="text"
