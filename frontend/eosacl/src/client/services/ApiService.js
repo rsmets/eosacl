@@ -179,14 +179,16 @@ async function takeScatterAction(action, dataValue, account) {
           data: dataValue
         }
       ]
-    },
+    }
+    ,
     {
       blocksBehind: 3,
       expireSeconds: 30
     }
   );
   console.log(resultWithConfig);
-  return true;
+  debugger;
+  return resultWithConfig;
 
   // try {
   //   console.log(1)

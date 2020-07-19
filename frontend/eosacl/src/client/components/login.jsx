@@ -198,7 +198,7 @@ class Login extends Component {
                   dispatch(passwordName(e.target.value));
                 }}
               /> */}
-              <input type="submit" value="Send" onClick={this.login}/>
+              <input type="submit" value="Authenticate" onClick={this.login}/>
               {/* <input type="submit" value="Send"/> */}
             </fieldset>
           </form>
