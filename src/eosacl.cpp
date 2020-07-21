@@ -39,6 +39,7 @@ ACTION eosacl::sharekey(name sender, name recipient, uint8_t lock_id, uint8_t ro
     //vector<name>& admins = modified_lock_detials.admins;
     //admins.insert(admins.end(), recipient);
 
+    // update the lock table lock's entry with the new user, making the sender pay for it
     _addUserToLock(modified_lock.lock_details, recipient, role);
     
     // update the user table user's entry with the new key, making the sender pay for it
@@ -61,9 +62,6 @@ ACTION eosacl::revokekey(name admin, name target, uint8_t lock_id) {
   
   // Modify the lock table entry, removing the target from the lock.admins vector
   _locks.modify(lock, admin, [&](auto& modified_lock) { // admin is paying for the storage
-    //struct lock& modified_lock_detials = modified_lock.lock_details;
-    //vector<name>& admins = modified_lock_detials.admins;
-    //admins.insert(admins.end(), recipient);
 
     // TODO validation should happen first so semi "transactional" in nature
 
@@ -88,7 +86,6 @@ ACTION eosacl::logaccess(name username, uint8_t lock_id, uint8_t role) {
   _checkaccess(username, lock_id, role);
 }
 
-// Maybe want to make this 'logaccess'? so makes more sense to gatekeep...? but then wouldn't really be right either. can log before checking permissions.
 ACTION eosacl::checkaccess(name username, uint8_t lock_id, uint8_t role) {
   // require_auth(get_self()); // could do this but then *only* this contract owner could use (restrict to me and my frontend)
   // require_auth(username); // the account logging access needs to have the authority to do so!
@@ -112,13 +109,8 @@ void eosacl::_checkaccess(name username, uint8_t lock_id, uint8_t role) {
   } else { // role == USER
     _checkUserLevelAccess(user, lock_id);
   }
-  // // check if the lock_id is found in the user's lock_id vector
-  // auto itr = std::find(user.lock_ids.begin(), user.lock_ids.end(), lock_id);
-  // //string message = string("user does not have a key to lock_id") + string ((char*)lock_id);
-  // string message = "user does not have a key to lock_id";
-  // check(itr != user.lock_ids.end(), message);
     
-  // // need to chekc the locks table as well?? shouldn't really but maybe should?
+  // need to check the locks table as well?? shouldn't really but maybe should?
   print (" Access verified.");
 }
 
@@ -129,7 +121,7 @@ void eosacl::_checkAdminLevelAccess(user_info user, uint8_t lock_id) {
   string message = "user does not have a key to lock_id";
   check(itr != user.lock_ids.end(), message);
     
-  // need to chekc the locks table as well?? shouldn't really but maybe should?
+  // need to check the locks table as well?? shouldn't really but maybe should?
 }
 
 void eosacl::_checkUserLevelAccess(user_info user, uint8_t lock_id) {
@@ -139,7 +131,7 @@ void eosacl::_checkUserLevelAccess(user_info user, uint8_t lock_id) {
   string message = "user does not have a key to lock_id";
   check(itr != user.access_only_lock_ids.end(), message);
     
-  // need to chekc the locks table as well?? shouldn't really but maybe should?
+  // need to check the locks table as well?? shouldn't really but maybe should?
 }
 
 void eosacl::_addUserToLock(lock& lock_detail, name& user, uint8_t role) {
@@ -180,7 +172,6 @@ void eosacl::_addLockToUser(name sender, name user, uint8_t lock_id,  uint8_t ro
   }
 }
 
-// 
 void eosacl::_addUserToVector(vector<name>& persons, name& user) {
   persons.insert(persons.end(), user);
 }
@@ -223,7 +214,7 @@ bool eosacl::_removeLockIdFromLockIdVector(vector<uint8_t>& lock_ids, uint8_t lo
     }
   }
 
-  //check(condition, "error message.");
+  // check(condition, "error message.");
   // check(lock_id_i_found != -1, "user was not part of admins list");
   if (lock_id_i_found != -1) {
     lock_ids.erase(lock_ids.begin() + lock_id_i_found); // need to get the iterate at the begining of the vector then just add the index to get where we want to be
@@ -260,7 +251,7 @@ string eosacl::_convertLockIdToString(uint8_t* lockId) {
   return string((char *)lockId);
 }
 
-/*
+/* TODO
 void eosacl::eraseLock(lock& lock_detail, name& user) {
     // get the lock from the _locks table
   auto& lock = _locks.get(lock_id, "lock does not exsist");

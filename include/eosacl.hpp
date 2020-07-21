@@ -29,7 +29,6 @@ CONTRACT eosacl : public contract {
       uint8_t  lock_id; // 1 byte
       vector<name> admins = {}; //(8 byte * admin_count)
       vector<name> users = {}; //(8 byte * admin_count)
-      //lock (name user) : admins.insert(admins.begin(), user){}
     };
 
     TABLE lock_info { // 1 byte + ( 1 byte + (8 byte * admin_count) )
@@ -40,12 +39,6 @@ CONTRACT eosacl : public contract {
     typedef multi_index<name("locks"), lock_info> locks_table;
 
     locks_table _locks;
-
-// NOT SURE THIS IS NEEDED?....
-    struct user {
-      name  username;
-      vector<uint8_t> lock_ids = {};
-    };
 
     TABLE user_info { // 8 bytes + ( 1 byte * lock_ids_count )
       name  username; // 8 bytes
