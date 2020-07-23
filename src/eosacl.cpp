@@ -102,7 +102,7 @@ void eosacl::_checkaccess(name username, uint8_t lock_id, uint8_t role) {
     
   
   // get the lock from the _locks table
-  auto& user = _users.get(username.value, "user is not had a key shared with, not in dapp yet.");
+  auto& user = _users.get(username.value, "User has not had a key shared with them yet.");
   // & ??  worked with the & before
   if (role == ADMIN) {
     _checkAdminLevelAccess(user, lock_id);
@@ -117,8 +117,8 @@ void eosacl::_checkaccess(name username, uint8_t lock_id, uint8_t role) {
 void eosacl::_checkAdminLevelAccess(user_info user, uint8_t lock_id) {
   // check if the lock_id is found in the user's lock_id vector
   auto itr = std::find(user.lock_ids.begin(), user.lock_ids.end(), lock_id);
-  //string message = string("user does not have a key to lock_id") + string ((char*)lock_id);
-  string message = "user does not have a key to lock_id";
+
+  string message = name{user.username}.to_string() + " does not have a key to " + to_string(lock_id) + ".";
   check(itr != user.lock_ids.end(), message);
     
   // need to check the locks table as well?? shouldn't really but maybe should?
@@ -127,8 +127,8 @@ void eosacl::_checkAdminLevelAccess(user_info user, uint8_t lock_id) {
 void eosacl::_checkUserLevelAccess(user_info user, uint8_t lock_id) {
   // check if the lock_id is found in the user's lock_id vector
   auto itr = std::find(user.access_only_lock_ids.begin(), user.access_only_lock_ids.end(), lock_id);
-  //string message = string("user does not have a key to lock_id") + string ((char*)lock_id);
-  string message = "user does not have a key to lock_id";
+
+  string message = name{user.username}.to_string() + " does not have a key to " + to_string(lock_id) + ".";
   check(itr != user.access_only_lock_ids.end(), message);
     
   // need to check the locks table as well?? shouldn't really but maybe should?
