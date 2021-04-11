@@ -42,7 +42,6 @@ CONTRACT eosacl : public contract {
 
     TABLE user_info { // 8 bytes + ( 1 byte * lock_ids_count )
       name  username; // 8 bytes
-      //user user_details;
       vector<uint8_t> lock_ids = {}; // ( 1 byte * lock_ids_count )
       vector<uint8_t> access_only_lock_ids = {}; // USER level keys // ( 1 byte * lock_ids_count )
       auto primary_key() const { return username.value; }; 
